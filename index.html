@@ -285,8 +285,8 @@
 </nav>
 
 <div class="doc-header">
-  <h1>Business Requirements Document</h1>
-  <p>Unified Transit Operations &amp; Electronic Ticketing Management Platform</p>
+  <h1>Unified Transit Operations &amp; Electronic Ticketing Management Platform</h1>
+  <p>Business Requirements Document</p>
   <div class="meta-table">
     <div class="meta-item"><span>Project</span>ETM Ticketing Platform</div>
     <div class="meta-item"><span>Client</span>MTC, Chennai</div>
@@ -2846,8 +2846,8 @@ function renderSections(sections) {
   sidebar.innerHTML = '<h2>Contents</h2>';
 
   sections.forEach((sec, i) => {
-    // Skip pure title sections with no content (first 2 H1s merged into header)
-    if (i < 2 && sec.nodes.length === 0) return;
+    // Skip first 2 H1s (doc title + platform name) — shown in header banner instead
+    if (i < 2) return;
 
     // Extract section number from title
     const numMatch = sec.title.match(/^(\d+[\w.]*)[.\s]/);
