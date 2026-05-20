@@ -1,0 +1,2935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETM Transit Operations BRD</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── Layout ── */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: #1a1a2e;
+    color: #c8ccd8;
+    overflow-y: auto;
+    padding: 24px 0 40px;
+    z-index: 100;
+    transition: transform 0.3s;
+  }
+  #sidebar h2 {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #5a6a9a;
+    padding: 0 20px 12px;
+    border-bottom: 1px solid #2a2a4a;
+    margin-bottom: 12px;
+  }
+  #sidebar a {
+    display: block;
+    padding: 6px 20px;
+    color: #9aa3c0;
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #sidebar a:hover, #sidebar a.active {
+    color: #e0e6ff;
+    background: #242450;
+    border-left-color: #6c7cff;
+  }
+  #sidebar a.sub { padding-left: 36px; font-size: 12px; color: #6a7490; }
+  #sidebar a.sub:hover { color: #c8ccd8; }
+
+  #main {
+    margin-left: 260px;
+    padding: 40px 48px;
+    max-width: 1100px;
+  }
+
+  /* ── Header banner ── */
+  .doc-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: white;
+    padding: 40px 48px;
+    margin-left: 260px;
+    margin-bottom: 0;
+  }
+  .doc-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.3px; }
+  .doc-header p { color: #9aa3c0; font-size: 14px; margin-top: 6px; }
+  .doc-header .meta-table { margin-top: 24px; display: flex; gap: 32px; flex-wrap: wrap; }
+  .doc-header .meta-item { font-size: 13px; }
+  .doc-header .meta-item span { color: #5a6a9a; display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── Section cards ── */
+  .section-card {
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    overflow: hidden;
+    border: 1px solid #e8eaf0;
+  }
+
+  .section-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 12px;
+    transition: background 0.15s;
+  }
+  .section-toggle:hover { background: #f7f8fc; }
+  .section-toggle.open { background: #f0f3ff; }
+
+  .section-toggle .toggle-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-toggle .toggle-title .sec-num {
+    background: #6c7cff;
+    color: white;
+    border-radius: 6px;
+    padding: 2px 9px;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .section-toggle .chevron {
+    color: #9aa3c0;
+    font-size: 18px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .section-toggle.open .chevron { transform: rotate(180deg); }
+
+  .section-body {
+    padding: 0 28px 24px;
+    display: none;
+  }
+  .section-body.open { display: block; }
+
+  /* ── Typography inside sections ── */
+  .section-body h1 { display: none; }
+
+  .section-body h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 24px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e8eaf0;
+  }
+  .section-body h2:first-child { margin-top: 8px; }
+
+  .section-body h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #4a5568;
+    margin: 18px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .section-body h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 14px 0 6px;
+  }
+
+  .section-body p { margin-bottom: 10px; color: #2d3748; }
+
+  .section-body ul, .section-body ol {
+    margin: 8px 0 12px 20px;
+    color: #2d3748;
+  }
+  .section-body li { margin-bottom: 4px; }
+
+  .section-body strong { color: #1a1a2e; }
+
+  /* ── Tables ── */
+  .section-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 18px;
+    font-size: 13.5px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e6f0;
+  }
+  .section-body th {
+    background: #f0f3ff;
+    color: #3a4578;
+    font-weight: 700;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #d0d8f0;
+  }
+  .section-body td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #eef0f8;
+    color: #2d3748;
+    vertical-align: top;
+  }
+  .section-body tr:last-child td { border-bottom: none; }
+  .section-body tr:nth-child(even) td { background: #f9faff; }
+
+  /* ── Code / inline code ── */
+  .section-body code {
+    background: #f0f3ff;
+    color: #5a4fcf;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+  }
+  .section-body pre {
+    background: #1a1a2e;
+    color: #c8ccd8;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  .section-body pre code { background: none; color: inherit; padding: 0; }
+
+  /* ── HR ── */
+  .section-body hr {
+    border: none;
+    border-top: 1px solid #e8eaf0;
+    margin: 20px 0;
+  }
+
+  /* ── Badges for key terms ── */
+  .tag {
+    display: inline-block;
+    background: #e8edff;
+    color: #4a5cce;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* ── Scrollbar ── */
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: #111128; }
+  #sidebar::-webkit-scrollbar-thumb { background: #2a2a5a; border-radius: 2px; }
+
+  /* ── Expand/collapse all bar ── */
+  #ctrl-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  #ctrl-bar button {
+    background: white;
+    border: 1px solid #d0d8f0;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #4a5580;
+    transition: all 0.15s;
+  }
+  #ctrl-bar button:hover { background: #f0f3ff; border-color: #8894d8; color: #1a1a2e; }
+  #ctrl-bar .version-tag {
+    margin-left: auto;
+    font-size: 12px;
+    color: #9aa3c0;
+  }
+
+  @media (max-width: 900px) {
+    #sidebar { transform: translateX(-260px); }
+    #main, .doc-header { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <h2>Contents</h2>
+  <!-- populated by JS -->
+</nav>
+
+<div class="doc-header">
+  <h1>Business Requirements Document</h1>
+  <p>Unified Transit Operations &amp; Electronic Ticketing Management Platform</p>
+  <div class="meta-table">
+    <div class="meta-item"><span>Project</span>ETM Ticketing Platform</div>
+    <div class="meta-item"><span>Client</span>MTC, Chennai</div>
+    <div class="meta-item"><span>Version</span>1.1</div>
+    <div class="meta-item"><span>Last Updated</span>2026-05-20</div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="ctrl-bar">
+    <button onclick="expandAll()">Expand All</button>
+    <button onclick="collapseAll()">Collapse All</button>
+    <span class="version-tag">v1.1 &mdash; Control-Centre Transit features reflected</span>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const rawHTML = `<h1 id="business-requirements-document-brd">Business Requirements
+Document (BRD)</h1>
+<h1
+id="unified-transit-operations-electronic-ticketing-management-platform">Unified
+Transit Operations &amp; Electronic Ticketing Management Platform</h1>
+<hr />
+<h2 id="document-information">Document Information</h2>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 84%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project Name</td>
+<td>Unified Transit Operations &amp; ETM Ticketing Platform</td>
+</tr>
+<tr>
+<td>Module Coverage</td>
+<td>ETM Mobile App, Control-center, Operations Dashboard, Audit &amp;
+Settlement Systems</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>1.1</td>
+</tr>
+<tr>
+<td>Prepared For</td>
+<td>MTC, Chennai</td>
+</tr>
+<tr>
+<td>Document Type</td>
+<td>Business Requirements Document</td>
+</tr>
+<tr>
+<td>Last Updated</td>
+<td>2026-05-20 — Control-Centre Transit module features reflected</td>
+</tr>
+</tbody>
+</table>
+<h1 id="executive-summary">1. Executive Summary</h1>
+<p>The Unified Transit Operations &amp; Electronic Ticketing Management
+Platform is a centralized ecosystem designed to manage and digitize the
+complete lifecycle of public bus transit operations.</p>
+<p>The platform integrates:</p>
+<ul>
+<li>Electronic Ticket Machines (ETMs)</li>
+<li>Fleet operations</li>
+<li>Scheduling and trip planning</li>
+<li>Crew management</li>
+<li>ETM Device management</li>
+<li>Paper roll inventory management</li>
+<li>Manual ticket inventory management</li>
+<li>Revenue collection &amp; audit</li>
+<li>Operational audits</li>
+<li>Conductor and Driver incentive module</li>
+<li>Settlement and reconciliation</li>
+<li>Reporting and analytics</li>
+</ul>
+<p>The solution aims to provide a scalable, configurable, and
+operationally efficient system for transit corporations and bus
+operators.</p>
+<p>The system shall support:</p>
+<ul>
+<li>Daily operational planning</li>
+<li>Real-time trip execution</li>
+<li>Ticketing and fare collection</li>
+<li>Vehicle and device management</li>
+<li>Audit and compliance workflows</li>
+<li>Revenue reconciliation</li>
+<li>Offline operational continuity</li>
+<li>Multi-depot and multi-entity operations</li>
+</ul>
+<hr />
+<h1 id="business-objectives">2. Business Objectives</h1>
+<h2 id="primary-objectives">2.1 Primary Objectives</h2>
+<ul>
+<li>Digitize bus transit operations end-to-end</li>
+<li>Eliminate manual waybill and trip management</li>
+<li>Improve revenue accountability</li>
+<li>Enable real-time operational visibility</li>
+<li>Standardize ETM operations across depots</li>
+<li>Improve fleet and crew utilization</li>
+<li>Reduce operational fraud and leakages</li>
+<li>Enable scalable integration with future mobility systems</li>
+</ul>
+<h2 id="operational-objectives">2.2 Operational Objectives</h2>
+<ul>
+<li>Centralize schedule and route planning</li>
+<li>Enable faster crew and vehicle allocation</li>
+<li>Support offline ticketing operations</li>
+<li>Reduce manual reconciliation efforts</li>
+<li>Improve operational transparency</li>
+<li>Enable data-driven decision-making</li>
+</ul>
+<h2 id="technology-objectives">2.3 Technology Objectives</h2>
+<ul>
+<li>Cloud-native scalable architecture</li>
+<li>API-first ecosystem</li>
+<li>Device-agnostic ETM operations</li>
+<li>Integration-ready backend systems</li>
+<li>High availability and reliability</li>
+<li>Real-time synchronization</li>
+</ul>
+<hr />
+<h1 id="scope">3. Scope</h1>
+<h2 id="in-scope">3.1 In Scope</h2>
+<h3 id="etm-mobile-application">ETM Mobile Application</h3>
+<ul>
+<li>Conductor login</li>
+<li>Duty waybill synchronization</li>
+<li>Ticket issuance</li>
+<li>Fare calculation</li>
+<li>QR/NCMC/wallet payment support</li>
+<li>Offline ticketing</li>
+<li>Trip management</li>
+<li>Collection view</li>
+<li>Shift closure</li>
+<li>Special tickets</li>
+<li>Pass validation</li>
+</ul>
+<h3 id="operations-dashboard">Operations Dashboard</h3>
+<ul>
+<li>Schedule management</li>
+<li>Trip planning</li>
+<li>Fleet management</li>
+<li>Device management</li>
+<li>Crew management</li>
+<li>Waybill generation</li>
+<li>Operational monitoring</li>
+<li>Audit management</li>
+<li>Special trips</li>
+</ul>
+<h3 id="backend-systems">Backend Systems</h3>
+<ul>
+<li>Master data management</li>
+<li>Settlement engine</li>
+<li>Audit workflows</li>
+<li>Notification engine</li>
+<li>Device synchronization</li>
+<li>Reporting services</li>
+</ul>
+<h3 id="device-ecosystem">Device Ecosystem</h3>
+<ul>
+<li>ETM mapping</li>
+<li>OBU mapping</li>
+<li>Tablet mapping</li>
+<li>GPS integration</li>
+</ul>
+<hr />
+<h2 id="out-of-scope">3.2 Out of Scope</h2>
+<ul>
+<li>HR payroll systems</li>
+<li>Vehicle maintenance systems</li>
+<li>Third-party ERP accounting systems</li>
+<li>Passenger mobile applications</li>
+<li>Driver behavioral analytics</li>
+</ul>
+<hr />
+<h1 id="stakeholders">4. Stakeholders</h1>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stakeholder</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport Corporation Management (MTC HQ)</td>
+<td>Strategic oversight</td>
+</tr>
+<tr>
+<td>Depot Managers</td>
+<td>Depot operations management</td>
+</tr>
+<tr>
+<td>Conductors</td>
+<td>Ticketing operations</td>
+</tr>
+<tr>
+<td>Drivers</td>
+<td>Fleet operations</td>
+</tr>
+<tr>
+<td>Auditors</td>
+<td>Revenue and operational audits</td>
+</tr>
+<tr>
+<td>Finance Team</td>
+<td>Settlement and reconciliation</td>
+</tr>
+<tr>
+<td>EDP &amp; Operations Team</td>
+<td>Schedule and trip management</td>
+</tr>
+<tr>
+<td>Technical Operations Team</td>
+<td>Device and infrastructure management</td>
+</tr>
+<tr>
+<td>System Administrators</td>
+<td>Platform administration</td>
+</tr>
+</tbody>
+</table>
+<h1 id="user-roles-permissions">5. User Roles &amp; Permissions</h1>
+<h2 id="md-exec-level---super-admin">5.1 MD &amp; Exec level - Super
+Admin</h2>
+<ul>
+<li>Full platform access</li>
+<li>Global configuration management (wages, allowances, collection bata
+%)</li>
+<li>Role assignment and access configuration</li>
+<li>Audit visibility</li>
+<li>Entity management</li>
+<li>HQ Corporate dashboard access</li>
+</ul>
+<h2 id="branch-manager">5.2 Branch Manager</h2>
+<ul>
+<li>Branch-level operational oversight</li>
+<li>Schedule and trip review</li>
+<li>Crew and fleet monitoring</li>
+<li>Challan review</li>
+</ul>
+<h2 id="edp-electronic-data-processing">5.3 EDP (Electronic Data
+Processing)</h2>
+<ul>
+<li>Schedule management</li>
+<li>Waybill management</li>
+<li>Trip deviation and chartered trip entry (OD input)</li>
+<li>TL-Code reason updates</li>
+<li>Fleet mapping</li>
+</ul>
+<h2 id="depot-manager">5.4 Depot Manager</h2>
+<ul>
+<li>Depot-specific operations</li>
+<li>Crew assignment and allocation</li>
+<li>Vehicle and device assignment</li>
+<li>Waybill generation oversight</li>
+<li>Manual ticket stock management</li>
+</ul>
+<h2 id="admin-staff">5.5 Admin Staff</h2>
+<ul>
+<li>Day-to-day data entry</li>
+<li>Waybill creation and management</li>
+<li>Manual ticket CSV upload</li>
+<li>Crew bulk CSV upload</li>
+</ul>
+<h2 id="auditor">5.6 Auditor</h2>
+<ul>
+<li>Waybill audit (daily, end of day)</li>
+<li>Crew change during audit</li>
+<li>Fleet change during breakdown</li>
+<li>Revenue validation</li>
+<li>Transaction review</li>
+<li>Challan generation post-audit</li>
+<li>Exception management</li>
+</ul>
+<h2 id="cash-finance-user">5.7 Cash &amp; Finance User</h2>
+<ul>
+<li>Settlement review</li>
+<li>Remittance computation</li>
+<li>Revenue reports</li>
+<li>Reconciliation workflows</li>
+</ul>
+<h2 id="conductor">5.8 Conductor</h2>
+<ul>
+<li>ETM operations</li>
+<li>Ticket issuance (digital + manual fallback)</li>
+<li>View all sales in ETM app</li>
+<li>Shift closure</li>
+<li>Revenue submission</li>
+<li>Daily &amp; Monthly Allowances</li>
+</ul>
+<h2 id="driver">5.9 Driver</h2>
+<ul>
+<li>Trip operations access</li>
+<li>Vehicle status management</li>
+<li>Daily &amp; Monthly Allowances</li>
+</ul>
+<h2 id="technical-support">5.10 Technical Support</h2>
+<ul>
+<li>Device diagnostics</li>
+<li>ETM troubleshooting</li>
+<li>Mapping updates</li>
+</ul>
+<h2 id="hq-corporate-dashboard-read-only">5.11 HQ Corporate Dashboard
+(Read-only)</h2>
+<ul>
+<li>Cross-depot operational visibility</li>
+<li>Financial aggregates</li>
+<li>No write access</li>
+</ul>
+<hr />
+<h1 id="system-architecture-overview">6. System Architecture
+Overview</h1>
+<h2 id="major-components">6.1 Major Components</h2>
+<h3 id="a.-etm-mobile-application">A. ETM Mobile Application</h3>
+<p>Field execution platform for conductors.</p>
+<h3 id="b.-control-centre">B. Control Centre</h3>
+<p>Centralized data flow and operational dashboard.</p>
+<h3 id="c.-backend-services">C. Backend Services</h3>
+<p>Microservices/APIs supporting operations.</p>
+<h3 id="d.-device-management-services">D. Device Management
+Services</h3>
+<p>Manages ETM/OBU/tablet lifecycle.</p>
+<h3 id="e.-reporting-analytics-engine">E. Reporting &amp; Analytics
+Engine</h3>
+<p>Operational and financial reporting.</p>
+<h3 id="f.-settlement-audit-engine">F. Settlement &amp; Audit
+Engine</h3>
+<p>Revenue reconciliation and audit workflows.</p>
+<hr />
+<h1 id="operational-workflow">7. Operational Workflow</h1>
+<h2 id="master-setup-flow">7.1 Master Setup Flow</h2>
+<ol type="1">
+<li>Service Types Creation</li>
+<li>Route Creation</li>
+<li>Depot Configuration</li>
+<li>Vehicle Registration</li>
+<li>Device Registration</li>
+<li>Employee Onboarding</li>
+<li>Fare Matrix Configuration</li>
+<li>Schedule Creation</li>
+<li>Schedule Trip Definition</li>
+<li>Waybill Generation</li>
+</ol>
+<hr />
+<h2 id="daily-operations-flow">7.2 Daily Operations Flow</h2>
+<ol type="1">
+<li>Crew allocation</li>
+<li>Vehicle allocation</li>
+<li>ETM sync</li>
+<li>Paper roll distribution</li>
+<li>Manual ticket distribution</li>
+<li>Impress amount balance</li>
+<li>Trip start</li>
+<li>Ticket issuance</li>
+<li>Trip closure</li>
+<li>Chartered trips</li>
+<li>Revenue sync</li>
+<li>Waybill closure</li>
+<li>Daily incentives</li>
+<li>Audit review</li>
+<li>Settlement processing</li>
+</ol>
+<hr />
+<h1 id="master-data-management">8. Master Data Management</h1>
+<h2 id="service-types-module">8.1 Service Types Module</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Defines transit service categories (e.g., Express, Ordinary) used to
+classify schedules and tickets.</p>
+<h3 id="features">Features</h3>
+<ul>
+<li>Create service types</li>
+<li>Configure abbreviations</li>
+<li>Configure ticket footer (English and local language)</li>
+<li>Enable/disable service type</li>
+<li>View paginated list (15 records/page) with status color badge</li>
+<li>Delete service type with confirmation dialog</li>
+</ul>
+<h3 id="fields">Fields</h3>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service Type Name</td>
+<td>Text</td>
+<td>Yes</td>
+<td>Full display name</td>
+</tr>
+<tr>
+<td>Service Type Code</td>
+<td>Text</td>
+<td>Yes</td>
+<td>Short code identifier</td>
+</tr>
+<tr>
+<td>Abbreviation</td>
+<td>Text</td>
+<td>Yes</td>
+<td>Printed on tickets</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Active / Inactive</td>
+</tr>
+<tr>
+<td>Ticket Footer (English)</td>
+<td>Text</td>
+<td>Yes</td>
+<td>Footer text printed on ticket</td>
+</tr>
+<tr>
+<td>Ticket Footer (Local)</td>
+<td>Text</td>
+<td>Yes</td>
+<td>Local language footer text</td>
+</tr>
+</tbody>
+</table>
+<h3 id="business-rules">Business Rules</h3>
+<ul>
+<li>All 6 fields are required to create a service type</li>
+<li>Status defaults to Active</li>
+<li>Service code must be unique</li>
+<li>Inactive service types cannot be assigned to schedules</li>
+</ul>
+<hr />
+<h2 id="route-management">8.2 Route Management</h2>
+<h3 id="current-implementation-status">Current Implementation
+Status</h3>
+<p>Routes are managed externally and consumed as read-only lookups
+within the Transit module via API (<code>getRoutes()</code>). No Route
+CRUD UI exists within Control-Centre Transit at this time.</p>
+<h3 id="features-planned-external">Features (Planned / External)</h3>
+<ul>
+<li>Route creation</li>
+<li>Stage &amp; Stop mapping</li>
+<li>Direction mapping</li>
+<li>Distance configuration</li>
+</ul>
+<h3 id="fields-1">Fields</h3>
+<ul>
+<li>Route Number</li>
+<li>Route Name</li>
+<li>Route type</li>
+<li>Source</li>
+<li>Destination</li>
+<li>Distance</li>
+<li>Active Status</li>
+</ul>
+<hr />
+<h2 id="depot-management">8.3 Depot Management</h2>
+<h3 id="current-implementation-status-1">Current Implementation
+Status</h3>
+<p>Depots are managed externally and consumed as read-only dropdowns
+within the Transit module via API (<code>getDepots()</code>). No Depot
+CRUD UI exists within Control-Centre Transit at this time.</p>
+<h3 id="features-planned-external-1">Features (Planned / External)</h3>
+<ul>
+<li>Depot onboarding</li>
+<li>Entity mapping</li>
+<li>Operational region mapping</li>
+<li>PoC for the depot</li>
+</ul>
+<hr />
+<h1 id="schedule-management">9. Schedule Management</h1>
+<h2 id="schedule-creation">9.1 Schedule Creation</h2>
+<h3 id="purpose-1">Purpose</h3>
+<p>Create and manage bus route schedules that define how routes operate
+across different shift types and service codes.</p>
+<h3 id="features-1">Features</h3>
+<ul>
+<li>Create and edit schedules</li>
+<li>Assign routes (searchable infinite-scroll combobox — 100 initial,
++100 on scroll)</li>
+<li>Assign service types</li>
+<li>Assign depots/entities</li>
+<li>Effective date management</li>
+<li>Search across all fields</li>
+<li>Paginated list view (15 records/page)</li>
+<li>Delete with confirmation</li>
+<li>CSV export of current page</li>
+</ul>
+<h3 id="fields-2">Fields</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 19%" />
+<col style="width: 7%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service Type</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>References service_type_internal</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>Searchable combobox</td>
+<td>Yes</td>
+<td>Infinite scroll; selected item always visible</td>
+</tr>
+<tr>
+<td>Entity / Depot</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>References depots</td>
+</tr>
+<tr>
+<td>Shift Type</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>AM, PM, AS, etc.</td>
+</tr>
+<tr>
+<td>Bus Schedule Number</td>
+<td>Auto-generated</td>
+<td>N/A</td>
+<td>Read-only; see auto-generated format below</td>
+</tr>
+<tr>
+<td>Service Code</td>
+<td>Text</td>
+<td>No</td>
+<td>Optional manual code</td>
+</tr>
+<tr>
+<td>Effective From</td>
+<td>Datetime</td>
+<td>Yes</td>
+<td>Schedule start datetime</td>
+</tr>
+<tr>
+<td>Effective Till</td>
+<td>Datetime</td>
+<td>No</td>
+<td>Optional end datetime</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Active / Inactive</td>
+</tr>
+</tbody>
+</table>
+<h3 id="schedule-types">Schedule Types</h3>
+<p>6 schedule types supported (configurable by Super Admin). Examples
+include Regular, Special, and other operator-defined types. Schedule
+type is configured at the Route master level.</p>
+<h3 id="auto-generated-schedule-number-format">Auto-generated Schedule
+Number Format</h3>
+<p><code>ServiceTypeCode-RouteNumber-ServiceCode-ShiftCode</code></p>
+<h3 id="business-rules-1">Business Rules</h3>
+<ul>
+<li>Bus Schedule Number auto-generated; regenerates on service type,
+route, service code, or shift type change</li>
+<li>Shift type name maps to code: AM→1, PM→2, AS→3</li>
+<li>Duplicate schedules not allowed</li>
+<li>Effective dates cannot overlap for the same schedule</li>
+<li>Only active routes and service types allowed</li>
+<li>Schedule type must be configured at route master level before
+schedule creation</li>
+</ul>
+<hr />
+<h2 id="schedule-trips">9.2 Schedule Trips</h2>
+<h3 id="purpose-2">Purpose</h3>
+<p>Define individual trip instances within a schedule, grouped by day
+type (Weekday, Weekend, Holiday, etc.).</p>
+<h3 id="features-2">Features</h3>
+<ul>
+<li>Assign trips to a schedule by day type</li>
+<li>Configure trip count and start time</li>
+<li>Define operational effective dates</li>
+<li>Paginated list (15/page) with search across all fields</li>
+<li>Create, edit, delete</li>
+<li>On successful creation: auto-navigates to Schedule Trip Details page
+with pre-filled route and entity context</li>
+</ul>
+<h3 id="fields-3">Fields</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 19%" />
+<col style="width: 8%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bus Schedule Number</td>
+<td>Searchable combobox</td>
+<td>Yes</td>
+<td>Infinite scroll</td>
+</tr>
+<tr>
+<td>Day Type</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Weekday, Weekend, Holiday, Special Operations</td>
+</tr>
+<tr>
+<td>Schedule Number Name</td>
+<td>Auto-generated</td>
+<td>N/A</td>
+<td><code>{schedule_number}-{day_type}</code></td>
+</tr>
+<tr>
+<td>No of Trips</td>
+<td>Number</td>
+<td>Yes</td>
+<td>Total trip count for this schedule trip</td>
+</tr>
+<tr>
+<td>Start Time</td>
+<td>Time</td>
+<td>Yes</td>
+<td>First trip start time</td>
+</tr>
+<tr>
+<td>Effective Start Date</td>
+<td>Datetime</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Effective End Date</td>
+<td>Datetime</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Active / Inactive</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supported-day-types">Supported Day Types</h3>
+<ul>
+<li>Weekday</li>
+<li>Weekend</li>
+<li>Holiday</li>
+<li>Special Operations</li>
+</ul>
+<h3 id="business-rules-2">Business Rules</h3>
+<ul>
+<li>Schedule Number Name auto-generated as
+<code>{schedule_number}-{day_type}</code></li>
+<li>After creation, system queries backend for created trip ID and
+parent schedule details (route_id, entity_id) to pre-fill the next step
+(Schedule Trip Details)</li>
+<li>Day type extracted by splitting schedule_number_name on “-”
+(segments after index 4)</li>
+</ul>
+<hr />
+<h2 id="schedule-trip-details">9.3 Schedule Trip Details</h2>
+<h3 id="purpose-3">Purpose</h3>
+<p>Define each individual trip segment within a schedule trip — route,
+timing, and distance per trip in the run.</p>
+<h3 id="sub-features">Sub-features</h3>
+<ol type="1">
+<li><strong>View Trip Details</strong> — Table view of all trips for a
+selected schedule trip</li>
+<li><strong>Create / Edit Single Trip Detail</strong> — Form for
+individual trip entry</li>
+<li><strong>Bulk Create Trip Details</strong> — Spreadsheet-style form
+for all N trips at once</li>
+</ol>
+<h3 id="view-table-columns">View Table Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schedule ID</td>
+<td>Internal ID</td>
+</tr>
+<tr>
+<td>Schedule Name</td>
+<td>schedule_number_name</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>Route identifier</td>
+</tr>
+<tr>
+<td>Trip Number</td>
+<td>Sequential trip number</td>
+</tr>
+<tr>
+<td>Trip Type</td>
+<td>Type classification</td>
+</tr>
+<tr>
+<td>Start Time</td>
+<td>Trip start time</td>
+</tr>
+<tr>
+<td>End Time</td>
+<td>Trip end time</td>
+</tr>
+<tr>
+<td>Distance</td>
+<td>Distance in KM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="create-edit-form-fields">Create / Edit Form Fields</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 22%" />
+<col style="width: 9%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schedule Trip</td>
+<td>Searchable combobox</td>
+<td>Yes</td>
+<td>Infinite scroll</td>
+</tr>
+<tr>
+<td>Trip Number</td>
+<td>Number</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Trip Order</td>
+<td>Number</td>
+<td>No</td>
+<td>Auto-calculated as max(existing)+1 on create</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>Searchable combobox</td>
+<td>Yes</td>
+<td>Infinite scroll</td>
+</tr>
+<tr>
+<td>Trip Type</td>
+<td>Dropdown</td>
+<td>No</td>
+<td>Includes “NONE” option</td>
+</tr>
+<tr>
+<td>Start Time</td>
+<td>Time</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>End Time</td>
+<td>Time</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Running Time</td>
+<td>Auto-calculated</td>
+<td>N/A</td>
+<td>end_time − start_time; overnight-aware</td>
+</tr>
+<tr>
+<td>Break Time</td>
+<td>Auto-calculated</td>
+<td>N/A</td>
+<td>start[next trip] − end[current trip]</td>
+</tr>
+<tr>
+<td>Break Type</td>
+<td>Dropdown</td>
+<td>No</td>
+<td>Includes “NONE” option</td>
+</tr>
+<tr>
+<td>Distance</td>
+<td>Number</td>
+<td>Yes</td>
+<td>KM</td>
+</tr>
+<tr>
+<td>Is Active Trip</td>
+<td>Checkbox</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Org Name</td>
+<td>Text</td>
+<td>No</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="features-3">Features</h3>
+<ul>
+<li>Select schedule trip via searchable combobox (drives table
+contents)</li>
+<li>CSV export of trip details</li>
+<li>CSV import (bulk upload; per-row upsert; shows succeeded/failed
+counts)</li>
+<li>Create single trip detail</li>
+<li>Bulk create all N trips at once (N from parent schedule trip’s
+no_trip)</li>
+<li>Edit trip detail by clicking table row</li>
+</ul>
+<h3 id="business-rules-3">Business Rules</h3>
+<ul>
+<li>Running time = end_time − start_time; if end &lt; start, adds 1440
+minutes (overnight wrapping)</li>
+<li>Break time auto-fills between adjacent trips</li>
+<li>Trip order auto-calculated as max(existing_trip_orders) + 1 in
+create mode</li>
+<li>Bulk import sends each row as a separate upsert via
+Promise.allSettled; reports succeeded/failed counts</li>
+<li>Bulk form rows auto-numbered 1..N; rows can be added or deleted
+(minimum 1 row)</li>
+<li>Distance validation mandatory per row</li>
+</ul>
+<hr />
+<h1 id="fleet-management">10. Fleet Management</h1>
+<h2 id="vehicle-registry">10.1 Vehicle Registry</h2>
+<h3 id="current-implementation-status-2">Current Implementation
+Status</h3>
+<p>Vehicle registry is managed externally. Fleet records are consumed as
+read-only lookups within the Transit module via API
+(<code>getFleets()</code>). No Vehicle CRUD UI exists within
+Control-Centre Transit at this time.</p>
+<h3 id="features-planned-external-2">Features (Planned / External)</h3>
+<ul>
+<li>Vehicle onboarding</li>
+<li>Vehicle classification</li>
+<li>Depot assignment</li>
+<li>Vehicle status management</li>
+</ul>
+<h3 id="vehicle-statuses">Vehicle Statuses</h3>
+<ul>
+<li>Active</li>
+<li>In Maintenance</li>
+<li>Decommissioned</li>
+<li>Suspended</li>
+</ul>
+<hr />
+<h2 id="fleet-etm-mapping">10.2 Fleet-ETM Mapping</h2>
+<h3 id="purpose-4">Purpose</h3>
+<p>Map vehicles (fleet) to Electronic Ticket Machines (ETM) via CSV bulk
+import.</p>
+<h3 id="features-4">Features</h3>
+<ul>
+<li>View paginated list (15 records/page) of Fleet-ETM mappings</li>
+<li>Import CSV to bulk-create/update mappings</li>
+<li>Pagination</li>
+</ul>
+<h3 id="data-columns">Data Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fleet ID</td>
+<td>Internal fleet ID</td>
+</tr>
+<tr>
+<td>Fleet No</td>
+<td>Vehicle registration no</td>
+</tr>
+<tr>
+<td>ETM ID</td>
+<td>ETM device identifier</td>
+</tr>
+</tbody>
+</table>
+<h3 id="business-rules-4">Business Rules</h3>
+<ul>
+<li>All imports via CSV only — no manual row creation UI</li>
+<li>CSV parsed client-side; each row upserted to
+<code>fleet_etm_mapping_internal</code></li>
+<li>One active ETM per fleet at a time</li>
+<li>Mapping history mandatory</li>
+<li>Audit logging mandatory</li>
+</ul>
+<hr />
+<h2 id="fleet-obu-mapping">10.3 Fleet-OBU Mapping</h2>
+<h3 id="purpose-5">Purpose</h3>
+<p>Map vehicles (fleet) to On-Board Units (OBU / GPS telemetry device)
+via CSV bulk import.</p>
+<h3 id="features-5">Features</h3>
+<ul>
+<li>View paginated list (15 records/page) of Fleet-OBU mappings</li>
+<li>Import CSV to bulk-create/update mappings</li>
+<li>Pagination</li>
+</ul>
+<h3 id="data-columns-1">Data Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fleet ID</td>
+<td>Internal fleet ID</td>
+</tr>
+<tr>
+<td>Fleet No</td>
+<td>Vehicle registration no</td>
+</tr>
+<tr>
+<td>OBU ID</td>
+<td>OBU device identifier</td>
+</tr>
+</tbody>
+</table>
+<h3 id="business-rules-5">Business Rules</h3>
+<ul>
+<li>All imports via CSV only — identical workflow to Fleet-ETM
+Mapping</li>
+<li>CSV parsed client-side; each row upserted to
+<code>fleet_obu_mapping_internal</code></li>
+<li>Device replacement tracking required</li>
+</ul>
+<hr />
+<h2 id="device-vehicle-mapping">10.4 Device Vehicle Mapping</h2>
+<h3 id="purpose-6">Purpose</h3>
+<p>Map handheld/tablet devices to specific vehicles, used for device
+tracking and waybill assignment.</p>
+<h3 id="features-6">Features</h3>
+<ul>
+<li>View paginated list (15 records/page)</li>
+<li>Tab-based search: search by Device ID or by Fleet ID</li>
+<li>Upload CSV to bulk-create/update mappings (multipart POST)</li>
+<li>Download sample CSV template (includes 2 example rows)</li>
+<li>Refresh list</li>
+<li>Validate CSV headers before upload</li>
+</ul>
+<h3 id="data-columns-2">Data Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Device ID</td>
+<td>Handheld/tablet device ID</td>
+</tr>
+<tr>
+<td>Fleet ID</td>
+<td>Vehicle number (vehicle_no)</td>
+</tr>
+<tr>
+<td>GTFS ID</td>
+<td>GTFS identifier</td>
+</tr>
+<tr>
+<td>Created At</td>
+<td>Mapping creation timestamp</td>
+</tr>
+<tr>
+<td>Updated At</td>
+<td>Last updated timestamp</td>
+</tr>
+</tbody>
+</table>
+<h3 id="validation-rules">Validation Rules</h3>
+<p>Required CSV headers:</p>
+<ul>
+<li><code>device_id</code></li>
+<li><code>fleet_id</code></li>
+</ul>
+<h3 id="business-rules-6">Business Rules</h3>
+<ul>
+<li>CSV must contain <code>device_id</code> and <code>fleet_id</code>
+headers; validated client-side before upload</li>
+<li>Upload uses multipart POST (not row-by-row upsert)</li>
+<li>Sample CSV download assists operators in preparing the correct
+format</li>
+<li>Search/filter applied client-side post-fetch</li>
+</ul>
+<hr />
+<h1 id="employee-management">11. Employee Management</h1>
+<h2 id="employee-onboarding">11.1 Employee Onboarding</h2>
+<h3 id="purpose-7">Purpose</h3>
+<p>Bulk onboard drivers and conductors via CSV file upload with
+validation preview before submission.</p>
+<h3 id="features-7">Features</h3>
+<ul>
+<li>Select role (Driver or Conductor)</li>
+<li>Select entity/depot</li>
+<li>Upload CSV with preview of parsed rows</li>
+<li>Validation error table displayed before upload</li>
+<li>Download sample CSV template</li>
+<li>Submit all rows in single bulk upload</li>
+<li>View upload result dialog (success count + failed count)</li>
+<li>Paginated list of uploaded employees</li>
+</ul>
+<h3 id="form-fields">Form Fields</h3>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 16%" />
+<col style="width: 12%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Role</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Driver or Conductor</td>
+</tr>
+<tr>
+<td>Entity / Depot</td>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Filters applicable depot</td>
+</tr>
+<tr>
+<td>CSV File</td>
+<td>File upload</td>
+<td>Yes</td>
+<td>Must match required column format</td>
+</tr>
+</tbody>
+</table>
+<h3 id="required-csv-columns">Required CSV Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>first_name</td>
+<td>Yes</td>
+<td>Employee first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>No</td>
+<td>Employee last name</td>
+</tr>
+<tr>
+<td>token_no</td>
+<td>Yes</td>
+<td>Unique staff token/ID</td>
+</tr>
+<tr>
+<td>mobile_no</td>
+<td>No</td>
+<td>Mobile number</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>No</td>
+<td>Gender</td>
+</tr>
+</tbody>
+</table>
+<h3 id="business-rules-7">Business Rules</h3>
+<ul>
+<li><code>first_name</code> and <code>token_no</code> required per row;
+missing rows flagged in validation errors table</li>
+<li>Token number must be unique</li>
+<li>Role maps to designation_id: Driver=1, Conductor=2</li>
+<li><code>department_id=1</code> and <code>organization_id=1</code>
+hardcoded (single-org system)</li>
+<li>Status always set to “Active” on upload</li>
+<li>Entire dataset sent as single bulk upsert (not row-by-row)</li>
+<li>Validation errors prevent upload until resolved</li>
+<li>Inactive employees cannot receive waybills</li>
+</ul>
+<hr />
+<h2 id="crew-allocation">11.2 Crew Allocation</h2>
+<h3 id="features-8">Features</h3>
+<ul>
+<li>Assign drivers and conductors</li>
+<li>Shift allocation</li>
+<li>Duty management</li>
+<li>Bulk CSV upload of crew data per depot (via Control-Centre
+portal)</li>
+</ul>
+<hr />
+<h1 id="waybill-management">12. Waybill Management</h1>
+<h2 id="waybill-generation">12.1 Waybill Generation</h2>
+<h3 id="purpose-8">Purpose</h3>
+<p>Create and manage daily duty sheets (waybills) that assign buses,
+conductors, and drivers to scheduled trips. Waybill generation happens
+<strong>before the operation day</strong>.</p>
+<h3 id="list-view-columns">List View Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID</td>
+<td>Internal waybill ID</td>
+</tr>
+<tr>
+<td>Bag No</td>
+<td>Ticket bag number</td>
+</tr>
+<tr>
+<td>Waybill No</td>
+<td>Generated waybill number</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>Associated schedule name</td>
+</tr>
+<tr>
+<td>Ticket Box</td>
+<td>Ticket box number</td>
+</tr>
+<tr>
+<td>Device</td>
+<td>Device serial number</td>
+</tr>
+<tr>
+<td>Fleet No</td>
+<td>Vehicle registration number</td>
+</tr>
+<tr>
+<td>Conductor</td>
+<td>Token number + full name</td>
+</tr>
+<tr>
+<td>Driver</td>
+<td>Token number + full name</td>
+</tr>
+<tr>
+<td>No of Device</td>
+<td>Device count assigned</td>
+</tr>
+<tr>
+<td>Created</td>
+<td>Waybill creation date</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Color-coded status badge</td>
+</tr>
+<tr>
+<td>Audited Date</td>
+<td>Date waybill was audited</td>
+</tr>
+<tr>
+<td>Actions</td>
+<td>Edit / Delete / Audit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="list-filters">List Filters</h3>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vehicle Number</td>
+<td>Text search</td>
+<td>Server-side “like” filter</td>
+</tr>
+<tr>
+<td>Duty Date</td>
+<td>Date picker</td>
+<td>Defaults to today</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Dropdown</td>
+<td>All waybill statuses</td>
+</tr>
+</tbody>
+</table>
+<h3 id="create-edit-form-fields-1">Create / Edit Form Fields</h3>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 18%" />
+<col style="width: 7%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schedule Number</td>
+<td>Searchable combobox</td>
+<td>Yes</td>
+<td>Infinite scroll; triggers entity auto-fill</td>
+</tr>
+<tr>
+<td>Schedule Trip Name</td>
+<td>Read-only</td>
+<td>N/A</td>
+<td>Auto-filled from selected schedule</td>
+</tr>
+<tr>
+<td>Service Type</td>
+<td>Read-only</td>
+<td>N/A</td>
+<td>Auto-filled</td>
+</tr>
+<tr>
+<td>Schedule Type</td>
+<td>Read-only</td>
+<td>N/A</td>
+<td>Auto-filled</td>
+</tr>
+<tr>
+<td>Ticket Box No</td>
+<td>Text</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Fleet No</td>
+<td>Searchable combobox</td>
+<td>Yes</td>
+<td>Infinite scroll</td>
+</tr>
+<tr>
+<td>Duty Date</td>
+<td>Date</td>
+<td>Yes</td>
+<td>Defaults to today</td>
+</tr>
+<tr>
+<td>Schedule Start Time</td>
+<td>Time</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Conductor Staff Number</td>
+<td>Searchable (token)</td>
+<td>Yes</td>
+<td>Infinite scroll; auto-fills conductor name</td>
+</tr>
+<tr>
+<td>Conductor Name</td>
+<td>Read-only</td>
+<td>N/A</td>
+<td>Auto-filled on conductor token selection</td>
+</tr>
+<tr>
+<td>Driver Staff Number</td>
+<td>Searchable (token)</td>
+<td>Yes</td>
+<td>Infinite scroll; auto-fills driver name</td>
+</tr>
+<tr>
+<td>Driver Name</td>
+<td>Read-only</td>
+<td>N/A</td>
+<td>Auto-filled on driver token selection</td>
+</tr>
+<tr>
+<td>No of Device</td>
+<td>Dropdown</td>
+<td>No</td>
+<td>0 – 5</td>
+</tr>
+<tr>
+<td>Device Serial Number</td>
+<td>Text</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>Regenerate Waybill Number</td>
+<td>Checkbox</td>
+<td>No</td>
+<td>Forces backend to generate a new waybill number</td>
+</tr>
+</tbody>
+</table>
+<h3 id="features-9">Features</h3>
+<ul>
+<li>Filtered, paginated list view (15 records/page)</li>
+<li>Create new waybill</li>
+<li>Edit existing waybill (form pre-filled)</li>
+<li>Delete waybill with confirmation</li>
+<li>Navigate to Transaction Audit for audited/closed waybills</li>
+</ul>
+<h3 id="business-rules-8">Business Rules</h3>
+<ul>
+<li>Selecting schedule number auto-populates entity_id from schedule
+details</li>
+<li>Conductor and driver names auto-fill on token number selection</li>
+<li>Regenerate Waybill Number checkbox triggers backend to generate a
+new number</li>
+<li>Duty date defaults to today</li>
+<li>Waybill re-change assignment must be supported (reassign waybill to
+a different crew or fleet post-generation)</li>
+</ul>
+<hr />
+<h2 id="waybill-lifecycle">12.2 Waybill Lifecycle</h2>
+<h3 id="status-flow">Status Flow</h3>
+<ul>
+<li>Draft</li>
+<li>Generated</li>
+<li>Assigned</li>
+<li>Active</li>
+<li>Online</li>
+<li>Closed</li>
+<li>Audited</li>
+<li>Processed</li>
+</ul>
+<h3 id="status-color-codes">Status Color Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Online</td>
+<td>Green</td>
+</tr>
+<tr>
+<td>Audited</td>
+<td>Blue</td>
+</tr>
+<tr>
+<td>Processed</td>
+<td>Purple</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>Yellow</td>
+</tr>
+</tbody>
+</table>
+<h3 id="waybill-closing-captured-data">Waybill Closing — Captured
+Data</h3>
+<p>The following must be captured in Control-Centre during waybill
+closing:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Data Point</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trip Deviation Reason</td>
+<td>Reason for route deviation</td>
+</tr>
+<tr>
+<td>Trip Reduction Reason</td>
+<td>Reason for reduction in operated trips</td>
+</tr>
+<tr>
+<td>TL-Code Reasons</td>
+<td>Standardized TL-code reason codes for trip delay or deviation</td>
+</tr>
+<tr>
+<td>Add Trip / Diversion</td>
+<td>Provision to add trip for diversion</td>
+</tr>
+<tr>
+<td>Police Warranty</td>
+<td>Warrant No, OD, Pax count, Fare, Station ID</td>
+</tr>
+<tr>
+<td>Family Pass</td>
+<td>Employee Ref No, OD, Pax count, Fare, Corporation</td>
+</tr>
+<tr>
+<td>Vouchers</td>
+<td>Up to 2 vouchers; Ref No per voucher</td>
+</tr>
+<tr>
+<td>Bus Stand Fee</td>
+<td>Token-based fee for privately operated bus stands</td>
+</tr>
+<tr>
+<td>Penalty</td>
+<td>Checking inspector penalty amount charged to crew</td>
+</tr>
+<tr>
+<td>Chartered Trip</td>
+<td>Trip(s) diverted (1 or 2); input which trip taken and from which
+trip continued; OD entered by EDP; allowances computed</td>
+</tr>
+<tr>
+<td>Impress Amount</td>
+<td>Initial change/coins given to conductor; deducted from final audit
+total</td>
+</tr>
+<tr>
+<td>ETM Roll Usage</td>
+<td>Rolls issued, returned, utilized (fresh + used roll tracking)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="business-rules-9">Business Rules</h3>
+<ul>
+<li>Closed waybills are immutable</li>
+<li>Audited waybills require authorization for edits</li>
+<li>Impress amount must be deducted from total collection during final
+audit</li>
+<li>TL-Code reason list must be configurable</li>
+<li>Max 2 vouchers per waybill</li>
+<li>Chartered trip allowances computed based on OD entered by EDP</li>
+</ul>
+<hr />
+<h2 id="waybill-audit">12.3 Waybill Audit</h2>
+<h3 id="purpose-9">Purpose</h3>
+<p>Audit and update waybill records — status, assigned fleet, and
+assigned tablet — with advanced multi-column filtering. Waybill audit
+happens <strong>daily at end of day</strong>.</p>
+<h3 id="table-columns">Table Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waybill No</td>
+<td>Waybill identifier</td>
+</tr>
+<tr>
+<td>Duty Date</td>
+<td>Date of duty</td>
+</tr>
+<tr>
+<td>Entity</td>
+<td>Depot / entity name</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>Schedule name</td>
+</tr>
+<tr>
+<td>Fleet No</td>
+<td>Vehicle registration number</td>
+</tr>
+<tr>
+<td>Conductor</td>
+<td>Token number + full name</td>
+</tr>
+<tr>
+<td>Driver</td>
+<td>Token number + full name</td>
+</tr>
+<tr>
+<td>ETM No</td>
+<td>Electronic Ticket Machine number</td>
+</tr>
+<tr>
+<td>Tablet No</td>
+<td>Assigned tablet identifier</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Color-coded status badge</td>
+</tr>
+<tr>
+<td>Actions</td>
+<td>Edit status / Edit fleet / Edit tablet / Audit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-system">Filter System</h3>
+<ul>
+<li>Up to 4 simultaneous server-side filters</li>
+<li>Filterable columns: Waybill No, Conductor Token, Driver Token,
+Status, Duty Date, Vehicle No, Entity ID</li>
+<li>Operators: Contains (like) / Is Exact (eq)</li>
+</ul>
+<h3 id="sortable-columns-client-side">Sortable Columns
+(client-side)</h3>
+<p>Waybill No, Duty Date, Entity, Vehicle No — with sort direction
+indicator</p>
+<h3 id="edit-dialogs">Edit Dialogs</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 34%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr>
+<th>Action</th>
+<th>Fields</th>
+<th>Role Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Edit Status</td>
+<td>Status dropdown (all statuses)</td>
+<td>Standard MtcFleetOpsRoles</td>
+</tr>
+<tr>
+<td>Edit Fleet</td>
+<td>Fleet No (searchable dropdown)</td>
+<td>TRANSIT_OPERATOR_UPDATE_WAYBILL_FLEET</td>
+</tr>
+<tr>
+<td>Edit Tablet</td>
+<td>Tablet No (searchable dropdown)</td>
+<td>Standard MtcFleetOpsRoles</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supported-filters">Supported Filters</h3>
+<ul>
+<li>Waybill Number</li>
+<li>Driver Token</li>
+<li>Conductor Token</li>
+<li>Vehicle Number</li>
+<li>Duty Date</li>
+<li>Entity</li>
+<li>Status</li>
+</ul>
+<h3 id="business-rules-10">Business Rules</h3>
+<ul>
+<li>Fleet edit button visible only to users with
+<code>TRANSIT_OPERATOR_UPDATE_WAYBILL_FLEET</code> permission</li>
+<li>Audit navigation passes waybill number, fleet, and duty date as
+query params to Transaction Audit page</li>
+<li>Sorting is client-side on the fetched page data</li>
+<li>Auditor can change crew (conductor/driver) during audit</li>
+<li>Auditor can change fleet during fleet breakdown</li>
+</ul>
+<hr />
+<h1 id="etm-mobile-application-1">13. ETM Mobile Application</h1>
+<h1 id="authentication-module">13.1 Authentication Module</h1>
+<h3 id="features-10">Features</h3>
+<ul>
+<li>Secure login</li>
+<li>Token-based authentication</li>
+<li>Biometric support (optional)</li>
+<li>Device binding</li>
+</ul>
+<h3 id="business-rules-11">Business Rules</h3>
+<ul>
+<li>Single active session per ETM</li>
+<li>Unauthorized devices blocked</li>
+</ul>
+<hr />
+<h1 id="duty-synchronization">13.2 Duty Synchronization</h1>
+<h3 id="features-11">Features</h3>
+<ul>
+<li>Fetch assigned waybill</li>
+<li>Download trip details</li>
+<li>Sync fare tables</li>
+<li>Sync route stages</li>
+<li>Sync impress amount (initial change/coins given to conductor)</li>
+</ul>
+<h3 id="offline-behaviour">Offline Behaviour</h3>
+<ul>
+<li>Cached sync data mandatory</li>
+<li>Retry sync mechanism required</li>
+</ul>
+<hr />
+<h1 id="ticketing-engine">13.3 Ticketing Engine</h1>
+<h3 id="features-12">Features</h3>
+<ul>
+<li>Issue paperless tickets</li>
+<li>Stage-to-stage fare calculation</li>
+<li>Passenger count handling</li>
+<li>Multiple ticket types</li>
+<li>Concessional tickets</li>
+<li>Pass validation</li>
+</ul>
+<h3 id="ticket-types">Ticket Types</h3>
+<ul>
+<li>Ordinary</li>
+<li>Express</li>
+<li>Pass</li>
+<li>Concessional</li>
+<li>Special Service</li>
+</ul>
+<hr />
+<h1 id="payment-module">13.4 Payment Module</h1>
+<h3 id="supported-payments">Supported Payments</h3>
+<ul>
+<li>Cash</li>
+<li>QR Payment</li>
+<li>UPI</li>
+<li>NCMC</li>
+<li>Transit Wallet</li>
+<li>Bank Card</li>
+</ul>
+<h3 id="features-13">Features</h3>
+<ul>
+<li>Digital receipt generation</li>
+<li>Payment retry handling</li>
+<li>Offline payment queueing</li>
+<li>NCMC top-up option (top-up amount added to remittance)</li>
+</ul>
+<hr />
+<h1 id="trip-operations">13.5 Trip Operations</h1>
+<h3 id="features-14">Features</h3>
+<ul>
+<li>Trip start/end</li>
+<li>Stage progression</li>
+<li>Live status updates</li>
+<li>GPS synchronization</li>
+</ul>
+<hr />
+<h1 id="offline-operations">13.6 Offline Operations</h1>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li>ETM shall work without internet</li>
+<li>Ticket issuance shall continue offline</li>
+<li>Transactions shall sync automatically when connectivity
+restores</li>
+<li>Offline logs shall be tamper resistant</li>
+</ul>
+<hr />
+<h1 id="a-sales-view-conductor">13.6A Sales View (Conductor)</h1>
+<h3 id="features-15">Features</h3>
+<ul>
+<li>Conductor can view all sales made so far in the current duty within
+the ETM app</li>
+<li>Breakdown by ticket type, payment mode, and stage</li>
+<li>Real-time running total visible during trip</li>
+</ul>
+<hr />
+<h1 id="shift-closure">13.7 Shift Closure</h1>
+<h3 id="features-16">Features</h3>
+<ul>
+<li>Revenue summary</li>
+<li>Ticket summary (digital + manual)</li>
+<li>Cash declaration</li>
+<li>Impress amount reconciliation (initial change deducted)</li>
+<li>Sync validation</li>
+<li>Final closure confirmation</li>
+</ul>
+<hr />
+<h1 id="fare-management">14. Fare Management</h1>
+<h2 id="fare-matrix">14.1 Fare Matrix</h2>
+<h3 id="features-17">Features</h3>
+<ul>
+<li>Stage fare configuration</li>
+<li>Service-type-wise fare rules</li>
+<li>Dynamic fare updates</li>
+<li>Effective date support</li>
+</ul>
+<hr />
+<h2 id="fare-rules">14.2 Fare Rules</h2>
+<h3 id="supported-rules">Supported Rules</h3>
+<ul>
+<li>Flat fare</li>
+<li>Distance-based fare</li>
+<li>Stage-based fare</li>
+<li>Peak pricing</li>
+<li>Special service pricing</li>
+</ul>
+<hr />
+<h1 id="trip-management">15. Trip Management</h1>
+<h2 id="live-trip-operations">15.1 Live Trip Operations</h2>
+<h3 id="purpose-10">Purpose</h3>
+<p>Manage live fleet trips — start and end trips for vehicles on a daily
+operational basis.</p>
+<h3 id="features-18">Features</h3>
+<ul>
+<li>Start trip for a vehicle</li>
+<li>End trip for a vehicle</li>
+<li>Track operational trip status</li>
+</ul>
+<h3 id="current-implementation">Current Implementation</h3>
+<p>Available at <code>/transit/fleet-trip</code> within Control-Centre.
+Accessible to MtcFleetOpsRoles under the BAP module.</p>
+<h3 id="statuses">Statuses</h3>
+<ul>
+<li>Scheduled</li>
+<li>Active</li>
+<li>Delayed</li>
+<li>Completed</li>
+<li>Cancelled</li>
+</ul>
+<hr />
+<h2 id="gps-telemetry-integration">15.2 GPS &amp; Telemetry
+Integration</h2>
+<h3 id="features-19">Features</h3>
+<ul>
+<li>Live location tracking</li>
+<li>ETA monitoring</li>
+<li>Route adherence</li>
+<li>Fleet visibility</li>
+</ul>
+<hr />
+<h1 id="settlement-reconciliation">16. Settlement &amp;
+Reconciliation</h1>
+<h2 id="revenue-settlement">16.1 Revenue Settlement</h2>
+<h3 id="features-20">Features</h3>
+<ul>
+<li>Daily settlement</li>
+<li>ETM-wise settlement</li>
+<li>Depot-wise settlement</li>
+<li>Conductor-wise settlement</li>
+</ul>
+<h3 id="remittance-formula">Remittance Formula</h3>
+<p><code>Remit = Total Collection − Allowances</code></p>
+<ul>
+<li>Total collection = Digital ETM sales + Manual ticket sales + NCMC
+top-up amounts</li>
+<li>NCMC card issuance bata (₹10 per 100 cards) added to remittance</li>
+<li>NCMC top-up amounts included in remittance</li>
+<li>Impress amount (initial change given to conductor) deducted from
+final collection before remittance</li>
+</ul>
+<hr />
+<h2 id="reconciliation-engine">16.2 Reconciliation Engine</h2>
+<h3 id="reconciliation-sources">Reconciliation Sources</h3>
+<ul>
+<li>Ticket sales</li>
+<li>Cash collection</li>
+<li>Digital payments</li>
+<li>Wallet settlements</li>
+<li>Bank confirmations</li>
+</ul>
+<hr />
+<h2 id="exception-management">16.3 Exception Management</h2>
+<h3 id="supported-exceptions">Supported Exceptions</h3>
+<ul>
+<li>Missing sync</li>
+<li>Revenue mismatch</li>
+<li>Duplicate transactions</li>
+<li>Invalid route operations</li>
+<li>Device mismatch</li>
+</ul>
+<hr />
+<h1 id="audit-management">17. Audit Management</h1>
+<h2 id="operational-audit">17.1 Operational Audit</h2>
+<h3 id="purpose-11">Purpose</h3>
+<p>Review transaction-level data for a specific waybill, fleet, and date
+range. Accessible from Waybill Generation and Waybill Audit for audited
+or closed waybills.</p>
+<h3 id="features-21">Features</h3>
+<ul>
+<li>Transaction audit report per waybill / fleet / date range</li>
+<li>Local search by Order ID, Source, Destination, Route Number, Ticket
+Number</li>
+<li>Date range filter (updates query params)</li>
+<li>CSV export of filtered results</li>
+<li>Summary stats: Total Transactions, Total Amount, Total Tickets</li>
+</ul>
+<h3 id="input-parameters-query-params">Input Parameters (query
+params)</h3>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>waybillNo</td>
+<td>Waybill number</td>
+</tr>
+<tr>
+<td>fleetId</td>
+<td>Fleet / vehicle identifier</td>
+</tr>
+<tr>
+<td>startDate</td>
+<td>Audit start date</td>
+</tr>
+<tr>
+<td>endDate</td>
+<td>Audit end date</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transaction-table-columns">Transaction Table Columns</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Depot</td>
+<td>Depot name</td>
+</tr>
+<tr>
+<td>Fleet</td>
+<td>Vehicle number</td>
+</tr>
+<tr>
+<td>Passenger Count</td>
+<td>Passengers on trip</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>Schedule name</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>Route number</td>
+</tr>
+<tr>
+<td>Service Type</td>
+<td>Service type</td>
+</tr>
+<tr>
+<td>Source</td>
+<td>Boarding stage</td>
+</tr>
+<tr>
+<td>Destination</td>
+<td>Alighting stage</td>
+</tr>
+<tr>
+<td>Waybill ID</td>
+<td>Internal waybill reference</td>
+</tr>
+<tr>
+<td>Ticket #</td>
+<td>Ticket number</td>
+</tr>
+<tr>
+<td>Denomination</td>
+<td>Ticket denomination</td>
+</tr>
+<tr>
+<td>Travel Date</td>
+<td>Date of travel</td>
+</tr>
+<tr>
+<td>Amount</td>
+<td>Fare amount</td>
+</tr>
+<tr>
+<td>Booking Date</td>
+<td>Date ticket was issued</td>
+</tr>
+<tr>
+<td>Booking Time</td>
+<td>Time ticket was issued</td>
+</tr>
+<tr>
+<td>Order ID</td>
+<td>Transaction order ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="api">API</h3>
+<p><code>adminApi.get('/transaction-audit')</code> — query params drive
+the API call; client-side filtering applied on fetched results.</p>
+<hr />
+<h2 id="financial-audit">17.2 Financial Audit</h2>
+<h3 id="features-22">Features</h3>
+<ul>
+<li>Revenue verification</li>
+<li>Settlement verification</li>
+<li>Fraud detection support</li>
+<li>Exception review</li>
+</ul>
+<hr />
+<h1 id="a.-manual-ticket-inventory-management">17A. Manual Ticket
+Inventory Management</h1>
+<h2 id="a.1-purpose">17A.1 Purpose</h2>
+<p>As a fallback to the digital ETM, pre-printed manual tickets are
+issued to conductors. The Control-Centre portal must manage this
+inventory — both stock given out and tickets sold.</p>
+<h2 id="a.2-features">17A.2 Features</h2>
+<ul>
+<li>Bulk CSV upload of manual ticket stock (given to conductor per
+duty)</li>
+<li>Record current stock issued and sold tickets per conductor</li>
+<li>Account manual ticket sales alongside digital ETM ticket sales in
+total collection</li>
+<li>MTC uploads manual stock file to portal; system computes total sales
+from both sources</li>
+</ul>
+<h2 id="a.3-csv-fields">17A.3 CSV Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Denomination</td>
+<td>Ticket value in paise</td>
+</tr>
+<tr>
+<td>KEY</td>
+<td>Ticket key identifier</td>
+</tr>
+<tr>
+<td>BLOCK-OPEN</td>
+<td>Opening block number</td>
+</tr>
+<tr>
+<td>MONTH-OPEN</td>
+<td>Opening month number</td>
+</tr>
+<tr>
+<td>RUNNING-NO</td>
+<td>Running serial number</td>
+</tr>
+<tr>
+<td>LAST-NO</td>
+<td>Last used number in block</td>
+</tr>
+<tr>
+<td>TYPE</td>
+<td>Ticket type classification</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a.4-business-rules">17A.4 Business Rules</h2>
+<ul>
+<li>Manual ticket sales must be added to total collection for remittance
+computation</li>
+<li>Stock reconciliation: issued vs. sold vs. returned must balance</li>
+<li>MTC uploads stock file; system derives sold quantity from RUNNING-NO
+and LAST-NO</li>
+</ul>
+<hr />
+<h1 id="b.-etm-roll-management">17B. ETM Roll Management</h1>
+<h2 id="b.1-purpose">17B.1 Purpose</h2>
+<p>Track paper roll inventory for ETM devices — issuance, utilization,
+and returns.</p>
+<h2 id="b.2-features">17B.2 Features</h2>
+<ul>
+<li>Record rolls issued to conductor per duty</li>
+<li>Record rolls returned (fresh/unused and used/partial)</li>
+<li>Track utilized rolls</li>
+<li>Captured during waybill closing</li>
+</ul>
+<h2 id="b.3-data-fields">17B.3 Data Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rolls Issued</td>
+<td>Number of fresh rolls given</td>
+</tr>
+<tr>
+<td>Rolls Returned</td>
+<td>Number returned (fresh + used)</td>
+</tr>
+<tr>
+<td>Rolls Utilized</td>
+<td>Derived: issued − returned</td>
+</tr>
+<tr>
+<td>Fresh Roll</td>
+<td>Unopened rolls returned</td>
+</tr>
+<tr>
+<td>Used Roll</td>
+<td>Partially used rolls returned</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="c.-incentives-allowances">17C. Incentives &amp; Allowances</h1>
+<h2 id="c.1-purpose">17C.1 Purpose</h2>
+<p>Compute conductor and driver incentives (bata) and all other
+allowances based on total collection and operated trips. All rates must
+be configurable by Super Admin in Control-Centre.</p>
+<h2 id="c.2-collection-bata">17C.2 Collection Bata</h2>
+<ul>
+<li>Fixed percentage of total collection</li>
+<li>Rate is configurable in Control-Centre master config</li>
+<li>Computed separately for conductor and driver</li>
+<li>Included in challan as conductor &amp; driver batta split</li>
+</ul>
+<h2 id="c.3-trip-based-allowances">17C.3 Trip-based Allowances</h2>
+<ul>
+<li>Other allowances (non-collection-based) are fixed per operated
+trip</li>
+<li>Rates configurable in master config</li>
+</ul>
+<h2 id="c.4-overtime-allowance">17C.4 Overtime Allowance</h2>
+<ul>
+<li>Applicable if trip duration exceeds 3 hours (maximum cap: 3 hours
+OT)</li>
+<li>Rate computed as per-hour rate derived from basic wages</li>
+<li>Formula: <code>OT Hours × (Basic Wages ÷ Standard Hours)</code></li>
+</ul>
+<h2 id="c.5-double-duty-week-off-allowance">17C.5 Double Duty / Week-off
+Allowance</h2>
+<ul>
+<li>Applicable when duty is 16 continuous hours (duty rest
+scenario)</li>
+<li>Double wages applicable for such duties</li>
+<li>Week-off duty also qualifies for double wages</li>
+</ul>
+<h2 id="c.6-ncmc-card-issuance-bata">17C.6 NCMC Card Issuance Bata</h2>
+<ul>
+<li>Per 100 NCMC cards issued: ₹10 bata</li>
+<li>Added to remittance computation</li>
+</ul>
+<h2 id="c.7-master-config">17C.7 Master Config</h2>
+<ul>
+<li>All wages and allowances rates maintained as master config in
+Control-Centre</li>
+<li>Accessible and editable only by Super Admin</li>
+<li>Applies globally across all depots</li>
+</ul>
+<h2 id="c.8-remittance-formula">17C.8 Remittance Formula</h2>
+<p><code>Remit = Total Collection − Allowances</code></p>
+<ul>
+<li>Total collection includes: digital ETM sales + manual ticket sales +
+NCMC top-up</li>
+<li>NCMC card issuance bata and NCMC top-up amounts added to
+remittance</li>
+<li>Impress amount (initial change given to conductor) deducted from
+final audit total</li>
+</ul>
+<hr />
+<h1 id="d.-challan-generation">17D. Challan Generation</h1>
+<h2 id="d.1-purpose">17D.1 Purpose</h2>
+<p>Post waybill audit, a challan is generated summarizing the day’s
+operations, collections, and crew bata for each duty.</p>
+<h2 id="d.2-features">17D.2 Features</h2>
+<ul>
+<li>Generated after waybill audit is completed</li>
+<li>Configurable schedule types (6 types: Regular, Special, and
+others)</li>
+<li>Schedule type configurable at route master level</li>
+</ul>
+<h2 id="d.3-challan-fields">17D.3 Challan Fields</h2>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Challan No</td>
+<td>Unique challan identifier</td>
+</tr>
+<tr>
+<td>Fleet No</td>
+<td>Vehicle registration number</td>
+</tr>
+<tr>
+<td>Mode of Sales</td>
+<td>Breakdown by payment mode</td>
+</tr>
+<tr>
+<td>ETM Roll</td>
+<td>Rolls issued/utilized for the duty</td>
+</tr>
+<tr>
+<td>Conductor Batta</td>
+<td>Conductor’s share of collection bata</td>
+</tr>
+<tr>
+<td>Driver Batta</td>
+<td>Driver’s share of collection bata</td>
+</tr>
+<tr>
+<td>Denomination-wise Split</td>
+<td>Payment mode-wise revenue breakdown</td>
+</tr>
+</tbody>
+</table>
+<h2 id="d.4-business-rules">17D.4 Business Rules</h2>
+<ul>
+<li>Challan generated only after waybill audit is complete</li>
+<li>Denomination-wise and mode-of-payment split must be included</li>
+<li>Conductor and driver batta computed and split per challan</li>
+<li>Schedule type on challan derived from route master
+configuration</li>
+</ul>
+<hr />
+<h1 id="reporting-analytics">18. Reporting &amp; Analytics</h1>
+<h2 id="operational-reports">18.1 Operational Reports</h2>
+<h3 id="reports">Reports</h3>
+<ul>
+<li>Daily trips report</li>
+<li>Fleet utilization report</li>
+<li>Schedule adherence report</li>
+<li>Depot operations report</li>
+</ul>
+<hr />
+<h2 id="financial-reports">18.2 Financial Reports</h2>
+<h3 id="reports-1">Reports</h3>
+<ul>
+<li>Revenue collection report</li>
+<li>Settlement report</li>
+<li>Payment-mode-wise revenue</li>
+<li>ETM revenue report</li>
+</ul>
+<hr />
+<h2 id="employee-reports">18.3 Employee Reports</h2>
+<h3 id="reports-2">Reports</h3>
+<ul>
+<li>Conductor productivity</li>
+<li>Driver duty reports</li>
+<li>Shift compliance</li>
+</ul>
+<hr />
+<h1 id="notification-system">19. Notification System</h1>
+<h2 id="supported-notifications">19.1 Supported Notifications</h2>
+<ul>
+<li>ETM sync failure</li>
+<li>Device offline alerts</li>
+<li>Trip delay alerts</li>
+<li>Revenue mismatch alerts</li>
+<li>Audit pending alerts</li>
+</ul>
+<h3 id="notification-channels">Notification Channels</h3>
+<ul>
+<li>In-app</li>
+<li>SMS</li>
+<li>Email</li>
+<li>Push notification</li>
+</ul>
+<hr />
+<h1 id="search-filters-usability">20. Search, Filters &amp;
+Usability</h1>
+<h2 id="global-requirements">20.1 Global Requirements</h2>
+<h3 id="features-23">Features</h3>
+<ul>
+<li>Infinite scroll dropdowns</li>
+<li>Pagination (15 records/page)</li>
+<li>Multi-filter search (up to 4 simultaneous filters in Waybill
+Audit)</li>
+<li>CSV export</li>
+<li>CSV import</li>
+<li>Inline editing via dialogs</li>
+<li>Toast notifications for all CRUD and bulk operations</li>
+</ul>
+<h3 id="pagination">Pagination</h3>
+<p>15 records per page by default across all list views.</p>
+<h3 id="infinite-scroll-dropdowns">Infinite Scroll Dropdowns</h3>
+<p>Used in forms with large datasets (routes, schedules, fleets,
+conductors, drivers): - Initial load: 100 items; +100 items on scroll to
+bottom - Selected item always visible regardless of scroll position -
+Search input resets scroll position</p>
+<h3 id="toast-notifications">Toast Notifications</h3>
+<ul>
+<li>All create, update, delete, and import operations trigger toast
+notifications</li>
+<li>Bulk import operations show succeeded/failed row counts</li>
+</ul>
+<hr />
+<h1 id="csv-importexport-requirements">21. CSV Import/Export
+Requirements</h1>
+<h2 id="import-requirements">21.1 Import Requirements</h2>
+<h3 id="features-24">Features</h3>
+<ul>
+<li>Client-side header validation before upload</li>
+<li>Duplicate detection</li>
+<li>Partial success handling (Promise.allSettled — individual row
+failures do not block rest)</li>
+<li>Validation preview (Employee Bulk Upload shows error table before
+submit)</li>
+<li>Error report: succeeded/failed counts shown in result dialog or
+toast</li>
+</ul>
+<h3 id="modules-supporting-csv-import">Modules Supporting CSV
+Import</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schedule Trip Details</td>
+<td>Per-row upsert; success/fail count toast</td>
+</tr>
+<tr>
+<td>Fleet-ETM Mapping</td>
+<td>Bulk upsert from CSV</td>
+</tr>
+<tr>
+<td>Fleet-OBU Mapping</td>
+<td>Bulk upsert from CSV</td>
+</tr>
+<tr>
+<td>Device Vehicle Mapping</td>
+<td>Multipart POST; headers validated</td>
+</tr>
+<tr>
+<td>Employee Bulk Upload</td>
+<td>Single bulk upsert; validation error table</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="export-requirements">21.2 Export Requirements</h2>
+<h3 id="features-25">Features</h3>
+<ul>
+<li>CSV export with proper quote escaping</li>
+<li>Filtered data exported (not always full table)</li>
+</ul>
+<h3 id="modules-supporting-csv-export">Modules Supporting CSV
+Export</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schedules</td>
+<td>Current page exported</td>
+</tr>
+<tr>
+<td>Schedule Trip Details</td>
+<td>Trip details for selected trip</td>
+</tr>
+<tr>
+<td>Transaction Audit</td>
+<td>Filtered audit results exported</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="api-integration-requirements">22. API &amp; Integration
+Requirements</h1>
+<h2 id="internal-apis">22.1 Internal APIs</h2>
+<h3 id="required-apis">Required APIs</h3>
+<ul>
+<li>Authentication APIs</li>
+<li>Schedule APIs</li>
+<li>Ticketing APIs</li>
+<li>Fare APIs</li>
+<li>Settlement APIs</li>
+<li>Device sync APIs</li>
+</ul>
+<hr />
+<h2 id="external-integrations">22.2 External Integrations</h2>
+<h3 id="payment-integrations">Payment Integrations</h3>
+<ul>
+<li>UPI PSPs</li>
+<li>NCMC providers</li>
+<li>Banking gateways</li>
+<li>Wallet providers</li>
+</ul>
+<h3 id="operational-integrations">Operational Integrations</h3>
+<ul>
+<li>GPS providers</li>
+<li>Notification gateways</li>
+<li>Aadhaar/eKYC systems (optional)</li>
+</ul>
+<hr />
+<h1 id="security-requirements">23. Security Requirements</h1>
+<h2 id="authentication-authorization">23.1 Authentication &amp;
+Authorization</h2>
+<h3 id="requirements-1">Requirements</h3>
+<ul>
+<li>Role-based access control (all Transit features restricted to BAP
+module + MtcFleetOpsRoles)</li>
+<li>Fleet edit in Waybill Audit requires additional
+<code>TRANSIT_OPERATOR_UPDATE_WAYBILL_FLEET</code> permission</li>
+<li>Role &amp; access configuration must be manageable by Super Admin
+within Control-Centre</li>
+<li>Roles: Super Admin, Branch Manager, EDP, Depot Manager, Admin Staff,
+Auditor, Cash &amp; Finance User, Conductor, Driver, Technical Support,
+HQ Corporate (read-only)</li>
+<li>Token-based authentication</li>
+<li>Session management</li>
+<li>Device authorization</li>
+</ul>
+<hr />
+<h2 id="data-security">23.2 Data Security</h2>
+<h3 id="requirements-2">Requirements</h3>
+<ul>
+<li>Encrypted API communication</li>
+<li>Secure transaction storage</li>
+<li>Audit logging</li>
+<li>Tamper-resistant offline storage</li>
+</ul>
+<hr />
+<h1 id="non-functional-requirements">24. Non-Functional
+Requirements</h1>
+<h2 id="performance">24.1 Performance</h2>
+<h3 id="requirements-3">Requirements</h3>
+<ul>
+<li>ETM ticket issuance &lt; 2 seconds</li>
+<li>Dashboard response &lt; 3 seconds</li>
+<li>API availability &gt; 99.5%</li>
+</ul>
+<hr />
+<h2 id="scalability">24.2 Scalability</h2>
+<h3 id="requirements-4">Requirements</h3>
+<ul>
+<li>Multi-city deployment support</li>
+<li>Multi-depot operations</li>
+<li>Horizontal scaling support</li>
+</ul>
+<hr />
+<h2 id="reliability">24.3 Reliability</h2>
+<h3 id="requirements-5">Requirements</h3>
+<ul>
+<li>Offline-first ETM operations</li>
+<li>Automatic retry mechanisms</li>
+<li>Fail-safe transaction sync</li>
+</ul>
+<hr />
+<h2 id="availability">24.4 Availability</h2>
+<h3 id="requirements-6">Requirements</h3>
+<ul>
+<li>24x7 operations support</li>
+<li>Disaster recovery support</li>
+<li>Backup and restore support</li>
+</ul>
+<hr />
+<h1 id="audit-logs-traceability">25. Audit Logs &amp; Traceability</h1>
+<h2 id="requirements-7">Requirements</h2>
+<p>The system shall maintain logs for:</p>
+<ul>
+<li>User actions</li>
+<li>Device mapping changes</li>
+<li>Waybill updates</li>
+<li>Settlement updates</li>
+<li>Ticket operations</li>
+<li>Login/logout history</li>
+<li>Failed transactions</li>
+</ul>
+<p>Audit logs shall be immutable.</p>
+<hr />
+<h1 id="future-enhancements">26. Future Enhancements</h1>
+<h2 id="proposed-future-modules">Proposed Future Modules</h2>
+<ul>
+<li>Passenger mobile app integration</li>
+<li>AI-based demand forecasting</li>
+<li>Predictive fleet management</li>
+<li>Facial authentication</li>
+<li>Smart depot management</li>
+<li>Occupancy analytics</li>
+<li>Driver behavior analytics</li>
+<li>Open mobility APIs</li>
+</ul>
+<hr />
+<h1 id="assumptions">27. Assumptions</h1>
+<ul>
+<li>All depots shall have periodic internet connectivity</li>
+<li>ETM devices shall support offline storage</li>
+<li>GPS devices shall provide standardized telemetry</li>
+<li>Operators shall use standardized CSV templates</li>
+</ul>
+<hr />
+<h1 id="risks-mitigation">28. Risks &amp; Mitigation</h1>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network outages</td>
+<td>Offline-first ETM architecture</td>
+</tr>
+<tr>
+<td>Device failures</td>
+<td>Device replacement workflows</td>
+</tr>
+<tr>
+<td>Revenue mismatch</td>
+<td>Multi-level audit system</td>
+</tr>
+<tr>
+<td>Duplicate mappings</td>
+<td>Validation and audit controls</td>
+</tr>
+<tr>
+<td>Data corruption</td>
+<td>Transactional sync and backups</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="success-metrics">29. Success Metrics</h1>
+<h2 id="operational-metrics">Operational Metrics</h2>
+<ul>
+<li>Reduction in manual operations</li>
+<li>Increased schedule adherence</li>
+<li>Improved ETM uptime</li>
+<li>Reduced reconciliation time</li>
+</ul>
+<h2 id="financial-metrics">Financial Metrics</h2>
+<ul>
+<li>Improved revenue accountability</li>
+<li>Reduced revenue leakage</li>
+<li>Faster settlement closure</li>
+</ul>
+<h2 id="technical-metrics">Technical Metrics</h2>
+<ul>
+<li>System uptime</li>
+<li>API success rate</li>
+<li>Sync success rate</li>
+<li>Average ticket issuance time</li>
+</ul>
+<hr />
+<h1 id="conclusion">30. Conclusion</h1>
+<p>The Unified Transit Operations &amp; ETM Platform is intended to
+serve as the foundational operational backbone for modern public
+transport systems.</p>
+<p>The platform consolidates scheduling, ticketing, fleet management,
+crew operations, audits, and settlement into a unified ecosystem capable
+of supporting large-scale multi-depot transit operations.</p>
+<p>The system is designed to support operational scalability, real-time
+visibility, financial accountability, and future mobility integrations
+while maintaining reliability in field conditions through robust
+offline-first capabilities.</p>
+`;
+
+function buildSections(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const nodes = Array.from(doc.body.childNodes);
+
+  // Group content under each H1
+  const sections = [];
+  let current = null;
+
+  nodes.forEach(node => {
+    if (node.nodeType === 1 && node.tagName === 'H1') {
+      current = { title: node.textContent.trim(), nodes: [] };
+      sections.push(current);
+    } else if (current) {
+      current.nodes.push(node.cloneNode(true));
+    }
+  });
+
+  return sections;
+}
+
+function renderSections(sections) {
+  const container = document.getElementById('content');
+  const sidebar = document.getElementById('sidebar');
+  container.innerHTML = '';
+  sidebar.innerHTML = '<h2>Contents</h2>';
+
+  sections.forEach((sec, i) => {
+    // Skip pure title sections with no content (first 2 H1s merged into header)
+    if (i < 2 && sec.nodes.length === 0) return;
+
+    // Extract section number from title
+    const numMatch = sec.title.match(/^(\d+[\w.]*)[.\s]/);
+    const secNum = numMatch ? numMatch[1] : (i + 1).toString();
+    const id = 'sec-' + secNum.replace(/\./g, '-');
+
+    // Card
+    const card = document.createElement('div');
+    card.className = 'section-card';
+    card.id = id;
+
+    // Toggle button
+    const btn = document.createElement('button');
+    btn.className = 'section-toggle';
+    btn.innerHTML = `
+      <span class="toggle-title">
+        <span class="sec-num">${secNum}</span>
+        ${sec.title.replace(/^\d+[\w.]*[.\s]+/, '')}
+      </span>
+      <span class="chevron">&#8964;</span>`;
+    btn.addEventListener('click', () => {
+      const body = card.querySelector('.section-body');
+      const isOpen = body.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+    });
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'section-body';
+    sec.nodes.forEach(n => body.appendChild(n.cloneNode(true)));
+
+    card.appendChild(btn);
+    card.appendChild(body);
+    container.appendChild(card);
+
+    // Sidebar link
+    const link = document.createElement('a');
+    link.href = '#' + id;
+    link.textContent = sec.title;
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const body = card.querySelector('.section-body');
+      if (!body.classList.contains('open')) {
+        body.classList.add('open');
+        btn.classList.add('open');
+      }
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    sidebar.appendChild(link);
+  });
+
+  // Auto-open first section
+  const first = container.querySelector('.section-body');
+  const firstBtn = container.querySelector('.section-toggle');
+  if (first) { first.classList.add('open'); firstBtn.classList.add('open'); }
+}
+
+function expandAll() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.section-toggle').forEach(b => b.classList.add('open'));
+}
+function collapseAll() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.section-toggle').forEach(b => b.classList.remove('open'));
+}
+
+// Highlight active sidebar link on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+      if (active) { active.classList.add('active'); active.scrollIntoView({ block: 'nearest' }); }
+    }
+  });
+}, { threshold: 0.2 });
+
+window.addEventListener('load', () => {
+  const sections = buildSections(rawHTML);
+  renderSections(sections);
+  document.querySelectorAll('.section-card').forEach(c => observer.observe(c));
+});
+</script>
+</body>
+</html>
