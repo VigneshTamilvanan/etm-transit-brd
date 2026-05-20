@@ -56,6 +56,15 @@
   }
   #sidebar a.sub { padding-left: 36px; font-size: 12px; color: #6a7490; }
   #sidebar a.sub:hover { color: #c8ccd8; }
+  #sidebar a.sub.active { color: #c8ccd8; background: #1e1e42; border-left-color: #4a5adf; }
+  #sidebar .nav-group-label {
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #3a4568;
+    padding: 14px 20px 4px;
+    font-weight: 700;
+  }
 
   #main {
     margin-left: 260px;
@@ -2839,33 +2848,152 @@ function buildSections(html) {
   return sections;
 }
 
+const MODULE_STATUS = [
+  { module: 'Service Types', path: '/transit/service-types', status: 'built', notes: 'Create, list, delete. All 6 fields.' },
+  { module: 'Schedules', path: '/transit/schedules', status: 'built', notes: 'Create, edit, delete, CSV export, search.' },
+  { module: 'Schedule Trips', path: '/transit/schedule-trips', status: 'built', notes: 'Create, edit, delete, auto-navigate to details.' },
+  { module: 'Schedule Trip Details', path: '/transit/schedule-trip-details', status: 'built', notes: 'Single + bulk create, CSV import/export.' },
+  { module: 'Waybill Generation', path: '/transit/waybill-generation', status: 'built', notes: 'Create, edit, delete, filters. Re-change assignment pending.' },
+  { module: 'Waybill Audit', path: '/transit/waybill-audit', status: 'built', notes: 'Multi-filter, crew/fleet change, status edit.' },
+  { module: 'Fleet-ETM Mapping', path: '/transit/fleet-etm-mapping', status: 'built', notes: 'CSV import only.' },
+  { module: 'Fleet-OBU Mapping', path: '/transit/fleet-obu-mapping', status: 'built', notes: 'CSV import only.' },
+  { module: 'Device Vehicle Mapping', path: '/transit/device-vehicle-mapping', status: 'built', notes: 'CSV upload, tab search, sample template.' },
+  { module: 'Trip Management', path: '/transit/fleet-trip', status: 'built', notes: 'Start/end trips. Full detail review pending.' },
+  { module: 'Employee Bulk Upload', path: '/transit/employee-bulk-upload', status: 'built', notes: 'CSV, validation preview, role mapping.' },
+  { module: 'Transaction Audit', path: '/transit/transaction-audit', status: 'built', notes: 'Per-waybill, CSV export, stats.' },
+  { module: 'Waybill Closing Provisions', path: '—', status: 'pending', notes: 'Trip deviation, police warranty, family pass, vouchers, bus stand fee, penalty, chartered trip, impress amount.' },
+  { module: 'Manual Ticket Inventory', path: '—', status: 'pending', notes: 'CSV upload of pre-printed ticket stock. Denomination, KEY, BLOCK/MONTH-OPEN, RUNNING-NO, TYPE fields.' },
+  { module: 'ETM Roll Management', path: '—', status: 'pending', notes: 'Issued / returned (fresh + used) / utilized tracking per duty.' },
+  { module: 'Incentives & Allowances', path: '—', status: 'pending', notes: 'Collection bata %, trip allowances, OT (3hr max), double duty/week-off wages.' },
+  { module: 'Challan Generation', path: '—', status: 'pending', notes: 'Post-audit challan. Denomination split, bata split, ETM roll, mode of sales.' },
+  { module: 'Master Config (Wages)', path: '—', status: 'pending', notes: 'Super admin config for all allowance rates.' },
+  { module: 'Role & Access Config', path: '—', status: 'pending', notes: 'UI to manage roles: Branch Manager, EDP, Depot Manager, Admin Staff, HQ.' },
+  { module: 'Route Management (CRUD)', path: '—', status: 'pending', notes: 'Currently read-only lookup. Full CRUD not yet built.' },
+  { module: 'Depot Management (CRUD)', path: '—', status: 'pending', notes: 'Currently read-only lookup.' },
+  { module: 'Vehicle Registry (CRUD)', path: '—', status: 'pending', notes: 'Fleet onboarding, classification, status management.' },
+  { module: 'Fare Management', path: '—', status: 'pending', notes: 'Stage/distance/flat fare matrix, service-type-wise rules.' },
+  { module: 'Settlement & Reconciliation', path: '—', status: 'pending', notes: 'Remit computation, NCMC bata, exception management.' },
+  { module: 'NCMC Top-up', path: '—', status: 'pending', notes: 'Top-up in ETM app + added to remittance.' },
+  { module: 'Crew Allocation', path: '—', status: 'pending', notes: 'Shift allocation, duty management, bulk CSV per depot.' },
+];
+
+function injectModuleStatus(container, sidebar) {
+  const statusCard = document.createElement('div');
+  statusCard.className = 'section-card';
+  statusCard.id = 'sec-status';
+
+  const built = MODULE_STATUS.filter(m => m.status === 'built').length;
+  const total = MODULE_STATUS.length;
+  const pct = Math.round((built / total) * 100);
+
+  const btn = document.createElement('button');
+  btn.className = 'section-toggle open';
+  btn.innerHTML = `
+    <span class="toggle-title">
+      <span class="sec-num" style="background:#0f3460">📋</span>
+      Module Status &amp; Build Progress
+    </span>
+    <span style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:13px;color:#4a5568">${built}/${total} built &nbsp;<strong style="color:#22c55e">${pct}%</strong></span>
+      <span class="chevron open">&#8964;</span>
+    </span>`;
+  btn.addEventListener('click', () => {
+    const body = statusCard.querySelector('.section-body');
+    const isOpen = body.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+    btn.querySelector('.chevron').classList.toggle('open', isOpen);
+  });
+
+  const builtRows = MODULE_STATUS.filter(m => m.status === 'built')
+    .map(m => `<tr>
+      <td><strong>${m.module}</strong></td>
+      <td><code style="font-size:12px">${m.path}</code></td>
+      <td><span style="background:#dcfce7;color:#16a34a;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600">✓ Built</span></td>
+      <td style="font-size:13px;color:#6b7280">${m.notes}</td>
+    </tr>`).join('');
+
+  const pendingRows = MODULE_STATUS.filter(m => m.status === 'pending')
+    .map(m => `<tr>
+      <td><strong>${m.module}</strong></td>
+      <td><code style="font-size:12px">${m.path}</code></td>
+      <td><span style="background:#fef9c3;color:#92400e;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600">⏳ To Build</span></td>
+      <td style="font-size:13px;color:#6b7280">${m.notes}</td>
+    </tr>`).join('');
+
+  const body = document.createElement('div');
+  body.className = 'section-body open';
+  body.innerHTML = `
+    <div style="margin:12px 0 20px;background:#f8faff;border-radius:8px;padding:16px 20px;border:1px solid #e0e7ff">
+      <div style="font-size:13px;color:#4a5568;margin-bottom:8px">Overall build progress</div>
+      <div style="background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden">
+        <div style="background:linear-gradient(90deg,#6c7cff,#22c55e);width:${pct}%;height:100%;border-radius:99px;transition:width 1s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#9aa3c0;margin-top:6px">
+        <span>${built} modules built</span><span>${total - built} modules pending</span>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Module</th><th>Path</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody>${builtRows}${pendingRows}</tbody>
+    </table>`;
+
+  statusCard.appendChild(btn);
+  statusCard.appendChild(body);
+  container.insertBefore(statusCard, container.firstChild);
+
+  const link = document.createElement('a');
+  link.href = '#sec-status';
+  link.textContent = '📋 Module Status';
+  link.style.fontWeight = '600';
+  link.style.color = '#8894d8';
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    statusCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  sidebar.insertBefore(link, sidebar.childNodes[1]);
+
+  const divider = document.createElement('div');
+  divider.style.cssText = 'height:1px;background:#2a2a4a;margin:8px 0 4px';
+  sidebar.insertBefore(divider, link.nextSibling);
+}
+
 function renderSections(sections) {
   const container = document.getElementById('content');
   const sidebar = document.getElementById('sidebar');
   container.innerHTML = '';
   sidebar.innerHTML = '<h2>Contents</h2>';
 
+  // Track parent section for sub-item indentation
+  let lastParentNum = null;
+
   sections.forEach((sec, i) => {
     // Skip first 2 H1s (doc title + platform name) — shown in header banner instead
     if (i < 2) return;
 
     // Extract section number from title
-    const numMatch = sec.title.match(/^(\d+[\w.]*)[.\s]/);
+    const numMatch = sec.title.match(/^(\d+[\w.]*)/);
     const secNum = numMatch ? numMatch[1] : (i + 1).toString();
     const id = 'sec-' + secNum.replace(/\./g, '-');
+
+    // Determine if sub-section (has dot or letter suffix like 13.1, 17A)
+    const isSub = /^\d+[A-Z]$|^\d+\.\d/.test(secNum);
 
     // Card
     const card = document.createElement('div');
     card.className = 'section-card';
     card.id = id;
+    if (isSub) card.style.marginLeft = '20px';
 
-    // Toggle button
+    // Badge color: sub-sections get softer color
+    const badgeBg = isSub ? '#8894d8' : '#6c7cff';
+    const titleText = sec.title.replace(/^\d+[\w.]*\s*[.\-–]?\s*/, '');
+
     const btn = document.createElement('button');
     btn.className = 'section-toggle';
     btn.innerHTML = `
       <span class="toggle-title">
-        <span class="sec-num">${secNum}</span>
-        ${sec.title.replace(/^\d+[\w.]*[.\s]+/, '')}
+        <span class="sec-num" style="background:${badgeBg}">${secNum}</span>
+        ${titleText}
       </span>
       <span class="chevron">&#8964;</span>`;
     btn.addEventListener('click', () => {
@@ -2874,7 +3002,6 @@ function renderSections(sections) {
       btn.classList.toggle('open', isOpen);
     });
 
-    // Body
     const body = document.createElement('div');
     body.className = 'section-body';
     sec.nodes.forEach(n => body.appendChild(n.cloneNode(true)));
@@ -2883,10 +3010,11 @@ function renderSections(sections) {
     card.appendChild(body);
     container.appendChild(card);
 
-    // Sidebar link
+    // Sidebar: group label before first sub-section
     const link = document.createElement('a');
     link.href = '#' + id;
     link.textContent = sec.title;
+    if (isSub) link.className = 'sub';
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const body = card.querySelector('.section-body');
@@ -2899,10 +3027,15 @@ function renderSections(sections) {
     sidebar.appendChild(link);
   });
 
-  // Auto-open first section
-  const first = container.querySelector('.section-body');
-  const firstBtn = container.querySelector('.section-toggle');
-  if (first) { first.classList.add('open'); firstBtn.classList.add('open'); }
+  // Inject module status card at top
+  injectModuleStatus(container, sidebar);
+
+  // Auto-open executive summary (first real section after status card)
+  const cards = container.querySelectorAll('.section-card');
+  if (cards[1]) {
+    cards[1].querySelector('.section-body').classList.add('open');
+    cards[1].querySelector('.section-toggle').classList.add('open');
+  }
 }
 
 function expandAll() {
