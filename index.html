@@ -144,6 +144,42 @@
   }
   .section-body.open { display: block; }
 
+  /* ── Nested sub-section inside parent ── */
+  .sub-section {
+    border: 1px solid #e8eaf0;
+    border-radius: 8px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .sub-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #f7f8fc;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+  .sub-toggle:hover { background: #eef1fb; }
+  .sub-toggle.open { background: #eef1fb; }
+  .sub-toggle .sub-num {
+    background: #8894d8;
+    color: white;
+    border-radius: 5px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .sub-toggle .sub-title { font-size: 14px; font-weight: 600; color: #1a1a2e; flex: 1; }
+  .sub-toggle .sub-chevron { color: #9aa3c0; font-size: 14px; transition: transform 0.2s; flex-shrink: 0; }
+  .sub-toggle.open .sub-chevron { transform: rotate(180deg); }
+  .sub-body { padding: 4px 18px 16px; display: none; }
+  .sub-body.open { display: block; }
+
   /* ── Typography inside sections ── */
   .section-body h1 { display: none; }
 
@@ -2962,67 +2998,124 @@ function injectModuleStatus(container, sidebar) {
   sidebar.insertBefore(divider, link.nextSibling);
 }
 
+function getBaseNum(secNum) {
+  // "13.1" → "13", "13.6A" → "13", "17A" → "17", "13" → null (is parent)
+  const dotMatch = secNum.match(/^(\d+)\./);
+  if (dotMatch) return dotMatch[1];
+  const letterMatch = secNum.match(/^(\d+)[A-Z]/);
+  if (letterMatch) return letterMatch[1];
+  return null;
+}
+
+function groupSections(sections) {
+  const parents = [];
+  const parentMap = {};
+
+  sections.forEach(sec => {
+    const numMatch = sec.title.match(/^(\d+[\w.]*)/);
+    const secNum = numMatch ? numMatch[1] : null;
+    sec.secNum = secNum;
+    sec.children = [];
+
+    const base = secNum ? getBaseNum(secNum) : null;
+    if (base && parentMap[base]) {
+      parentMap[base].children.push(sec);
+    } else {
+      parents.push(sec);
+      if (secNum) parentMap[secNum] = sec;
+    }
+  });
+
+  return parents;
+}
+
 function renderSections(sections) {
   const container = document.getElementById('content');
   const sidebar = document.getElementById('sidebar');
   container.innerHTML = '';
   sidebar.innerHTML = '<h2>Contents</h2>';
 
-  // Track parent section for sub-item indentation
-  let lastParentNum = null;
+  // Skip first 2 (doc title + platform name)
+  const filtered = sections.slice(2);
+  const grouped = groupSections(filtered);
 
-  sections.forEach((sec, i) => {
-    // Skip first 2 H1s (doc title + platform name) — shown in header banner instead
-    if (i < 2) return;
+  grouped.forEach(sec => {
+    const secNum = sec.secNum || '?';
+    const id = 'sec-' + secNum.replace(/\./g, '-').replace(/[A-Z]/g, m => '-' + m);
+    const titleText = sec.title.replace(/^\d+[\w.]*\s*[.\-–]?\s*/, '');
 
-    // Extract section number from title
-    const numMatch = sec.title.match(/^(\d+[\w.]*)/);
-    const secNum = numMatch ? numMatch[1] : (i + 1).toString();
-    const id = 'sec-' + secNum.replace(/\./g, '-');
-
-    // Determine if sub-section (has dot or letter suffix like 13.1, 17A)
-    const isSub = /^\d+[A-Z]$|^\d+\.\d/.test(secNum);
-
-    // Card
     const card = document.createElement('div');
     card.className = 'section-card';
     card.id = id;
-    if (isSub) card.style.marginLeft = '20px';
-
-    // Badge color: sub-sections get softer color
-    const badgeBg = isSub ? '#8894d8' : '#6c7cff';
-    const titleText = sec.title.replace(/^\d+[\w.]*\s*[.\-–]?\s*/, '');
 
     const btn = document.createElement('button');
     btn.className = 'section-toggle';
     btn.innerHTML = `
       <span class="toggle-title">
-        <span class="sec-num" style="background:${badgeBg}">${secNum}</span>
+        <span class="sec-num">${secNum}</span>
         ${titleText}
       </span>
       <span class="chevron">&#8964;</span>`;
-    btn.addEventListener('click', () => {
-      const body = card.querySelector('.section-body');
-      const isOpen = body.classList.toggle('open');
-      btn.classList.toggle('open', isOpen);
-    });
 
     const body = document.createElement('div');
     body.className = 'section-body';
+
+    // Parent's own content
     sec.nodes.forEach(n => body.appendChild(n.cloneNode(true)));
+
+    // Nested sub-sections
+    if (sec.children.length > 0) {
+      const subsWrap = document.createElement('div');
+      subsWrap.style.marginTop = '12px';
+
+      sec.children.forEach(child => {
+        const childNum = child.secNum;
+        const childTitle = child.title.replace(/^\d+[\w.]*\s*[.\-–]?\s*/, '');
+        const subId = 'sec-' + childNum.replace(/\./g, '-');
+
+        const sub = document.createElement('div');
+        sub.className = 'sub-section';
+        sub.id = subId;
+
+        const subBtn = document.createElement('button');
+        subBtn.className = 'sub-toggle';
+        subBtn.innerHTML = `
+          <span class="sub-num">${childNum}</span>
+          <span class="sub-title">${childTitle}</span>
+          <span class="sub-chevron">&#8964;</span>`;
+
+        const subBody = document.createElement('div');
+        subBody.className = 'sub-body';
+        child.nodes.forEach(n => subBody.appendChild(n.cloneNode(true)));
+
+        subBtn.addEventListener('click', () => {
+          const isOpen = subBody.classList.toggle('open');
+          subBtn.classList.toggle('open', isOpen);
+        });
+
+        sub.appendChild(subBtn);
+        sub.appendChild(subBody);
+        subsWrap.appendChild(sub);
+      });
+
+      body.appendChild(subsWrap);
+    }
+
+    btn.addEventListener('click', () => {
+      const isOpen = body.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+    });
 
     card.appendChild(btn);
     card.appendChild(body);
     container.appendChild(card);
 
-    // Sidebar: group label before first sub-section
+    // Sidebar — parent link
     const link = document.createElement('a');
     link.href = '#' + id;
     link.textContent = sec.title;
-    if (isSub) link.className = 'sub';
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      const body = card.querySelector('.section-body');
       if (!body.classList.contains('open')) {
         body.classList.add('open');
         btn.classList.add('open');
@@ -3030,12 +3123,41 @@ function renderSections(sections) {
       card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     sidebar.appendChild(link);
+
+    // Sidebar — child links indented
+    sec.children.forEach(child => {
+      const childId = 'sec-' + child.secNum.replace(/\./g, '-');
+      const cl = document.createElement('a');
+      cl.href = '#' + childId;
+      cl.className = 'sub';
+      cl.textContent = child.title;
+      cl.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Open parent first
+        if (!body.classList.contains('open')) {
+          body.classList.add('open');
+          btn.classList.add('open');
+        }
+        // Open child
+        const subEl = document.getElementById(childId);
+        if (subEl) {
+          const sb = subEl.querySelector('.sub-body');
+          const sbtn = subEl.querySelector('.sub-toggle');
+          if (sb && !sb.classList.contains('open')) {
+            sb.classList.add('open');
+            sbtn.classList.add('open');
+          }
+          subEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+      sidebar.appendChild(cl);
+    });
   });
 
   // Inject module status card at top
   injectModuleStatus(container, sidebar);
 
-  // Auto-open executive summary (first real section after status card)
+  // Auto-open executive summary
   const cards = container.querySelectorAll('.section-card');
   if (cards[1]) {
     cards[1].querySelector('.section-body').classList.add('open');
