@@ -3085,8 +3085,12 @@ function renderSections(sections) {
   container.innerHTML = '';
   sidebar.innerHTML = '<h2>Contents</h2>';
 
+  const SKIP_TITLES = ['26', '27', '28'];
   // Skip first 2 (doc title + platform name)
-  const filtered = sections.slice(2);
+  const filtered = sections.slice(2).filter(s => {
+    const num = (s.title.match(/^(\d+)/) || [])[1];
+    return !SKIP_TITLES.includes(num);
+  });
   const grouped = groupSections(filtered);
 
   grouped.forEach(sec => {
