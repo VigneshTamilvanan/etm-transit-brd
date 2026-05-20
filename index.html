@@ -315,13 +315,63 @@
     color: #9aa3c0;
   }
 
+  /* ── Mobile hamburger ── */
+  #menu-btn {
+    display: none;
+    position: fixed;
+    top: 12px; left: 12px;
+    z-index: 200;
+    background: #1a1a2e;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+  }
+  #menu-btn span {
+    display: block;
+    width: 22px; height: 2px;
+    background: #c8ccd8;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 90;
+  }
+
   @media (max-width: 900px) {
-    #sidebar { transform: translateX(-260px); }
-    #main, .doc-header { margin-left: 0; }
+    #menu-btn { display: flex; }
+    #sidebar {
+      transform: translateX(-260px);
+      transition: transform 0.3s;
+    }
+    #sidebar.open { transform: translateX(0); }
+    #overlay.open { display: block; }
+    #main { margin-left: 0; padding: 24px 16px; }
+    .doc-header { margin-left: 0; padding: 56px 20px 28px; }
+    .doc-header h1 { font-size: 19px; }
+    .doc-header .meta-table { gap: 16px; }
+    #ctrl-bar { flex-wrap: wrap; }
+    #ctrl-bar .version-tag { margin-left: 0; width: 100%; }
+    .section-toggle { padding: 14px 16px; }
+    .section-toggle .toggle-title { font-size: 14px; }
+    .section-body { padding: 0 16px 18px; }
+    .section-body table { font-size: 12px; display: block; overflow-x: auto; }
+    .section-body th, .section-body td { padding: 7px 10px; }
   }
 </style>
 </head>
 <body>
+
+<button id="menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="overlay" onclick="toggleSidebar()"></div>
 
 <nav id="sidebar">
   <h2>Contents</h2>
@@ -3163,6 +3213,11 @@ function renderSections(sections) {
     cards[1].querySelector('.section-body').classList.add('open');
     cards[1].querySelector('.section-toggle').classList.add('open');
   }
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
 }
 
 function expandAll() {
