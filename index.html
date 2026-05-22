@@ -2933,50 +2933,98 @@ function buildSections(html) {
   return sections;
 }
 
+// clients: array — both = common module, one = client-specific
 const MODULE_STATUS = [
-  // ── MTC, Chennai ──
-  { module: 'Service Types', path: '/transit/service-types', status: 'built', client: 'MTC, Chennai', notes: 'Create, list, delete. All 6 fields.' },
-  { module: 'Schedules', path: '/transit/schedules', status: 'built', client: 'MTC, Chennai', notes: 'Create, edit, delete, CSV export, search.' },
-  { module: 'Schedule Trips', path: '/transit/schedule-trips', status: 'built', client: 'MTC, Chennai', notes: 'Create, edit, delete, auto-navigate to details.' },
-  { module: 'Schedule Trip Details', path: '/transit/schedule-trip-details', status: 'built', client: 'MTC, Chennai', notes: 'Single + bulk create, CSV import/export.' },
-  { module: 'Waybill Generation', path: '/transit/waybill-generation', status: 'built', client: 'MTC, Chennai', notes: 'Create, edit, delete, filters. Re-change assignment pending.' },
-  { module: 'Waybill Audit', path: '/transit/waybill-audit', status: 'built', client: 'MTC, Chennai', notes: 'Multi-filter, crew/fleet change, status edit.' },
-  { module: 'Fleet-ETM Mapping', path: '/transit/fleet-etm-mapping', status: 'built', client: 'MTC, Chennai', notes: 'CSV import only.' },
-  { module: 'Fleet-OBU Mapping', path: '/transit/fleet-obu-mapping', status: 'built', client: 'MTC, Chennai', notes: 'CSV import only.' },
-  { module: 'Device Vehicle Mapping', path: '/transit/device-vehicle-mapping', status: 'built', client: 'MTC, Chennai', notes: 'CSV upload, tab search, sample template.' },
-  { module: 'Trip Management', path: '/transit/fleet-trip', status: 'built', client: 'MTC, Chennai', notes: 'Start/end trips. Full detail review pending.' },
-  { module: 'Employee Bulk Upload', path: '/transit/employee-bulk-upload', status: 'built', client: 'MTC, Chennai', notes: 'CSV, validation preview, role mapping.' },
-  { module: 'Transaction Audit', path: '/transit/transaction-audit', status: 'built', client: 'MTC, Chennai', notes: 'Per-waybill, CSV export, stats.' },
-  { module: 'Waybill Closing Provisions', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Trip deviation, police warranty, family pass, vouchers, bus stand fee, penalty, chartered trip, impress amount.' },
-  { module: 'Manual Ticket Inventory', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'CSV upload of pre-printed ticket stock. Denomination, KEY, BLOCK/MONTH-OPEN, RUNNING-NO, TYPE fields.' },
-  { module: 'ETM Roll Management', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Issued / returned (fresh + used) / utilized tracking per duty.' },
-  { module: 'Incentives & Allowances', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Collection bata %, trip allowances, OT (3hr max), double duty/week-off wages.' },
-  { module: 'Challan Generation', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Post-audit challan. Denomination split, bata split, ETM roll, mode of sales.' },
-  { module: 'Master Config (Wages)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Super admin config for all allowance rates.' },
-  { module: 'Role & Access Config', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'UI to manage roles: Branch Manager, EDP, Depot Manager, Admin Staff, HQ.' },
-  { module: 'Route Management (CRUD)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Currently read-only lookup. Full CRUD not yet built.' },
-  { module: 'Depot Management (CRUD)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Currently read-only lookup.' },
-  { module: 'Vehicle Registry (CRUD)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Fleet onboarding, classification, status management.' },
-  { module: 'Fare Management', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Stage/distance/flat fare matrix, service-type-wise rules.' },
-  { module: 'Settlement & Reconciliation', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Remit computation, NCMC bata, exception management.' },
-  { module: 'NCMC Top-up', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Top-up in ETM app + added to remittance.' },
-  { module: 'Crew Allocation', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Shift allocation, duty management, bulk CSV per depot.' },
+  // ── PLATFORM & ACCESS ──
+  { cat: 'Platform & Access', module: 'User Management & RBAC', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Role-based access, SSO/MFA, user add/edit/delete. PM-e-seva requires multi-city, authority, operator, city roles. MTC needs Branch Manager, EDP, Depot, Admin, HQ.' },
+  { cat: 'Platform & Access', module: 'Master Config (Wages & Rules)', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Configurable business rules with effective dates. MTC: wages, bata %, allowances. PM-e-seva: fare rules, contract params.' },
+  { cat: 'Platform & Access', module: 'Dashboard & MIS Reports', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Operational KPI dashboards and role-based MIS reports. Required by both — PM-e-seva specifies drill-down/drill-up by city/authority.' },
 
-  // ── PM-e-seva, NCR ──
-  { module: 'General Platform & User Management', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Multi-language (EN/HI), SSO, MFA, RBAC, business rule config with effective dates, PWA support.' },
-  { module: 'Dashboard & MIS Reports', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Operational dashboard and MIS reporting across all modules.' },
-  { module: 'Contract Management (CMS)', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'CMS for cities, operators, and authority. Workflow-based contract lifecycle management.' },
-  { module: 'Automatic Vehicle Location (AVL)', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Real-time vehicle tracking, route replay, route network config, maps integration.' },
-  { module: 'Passenger Counting System', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'Automated passenger counting integrated with AVL.' },
-  { module: 'Panic Alerts (AIS-140)', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'AIS-140 compliant panic alert system for crew safety.' },
-  { module: 'Crew Management System', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Roster, duty allocation, bus dispatch, crew mobile app, dashboard, MIS reports.' },
-  { module: 'Automated Fare Collection (AFCS)', path: '—', status: 'clarify', client: 'PM-e-seva, NCR', notes: 'Central AFC system design needs clarity. ETM integration, fare media/products, config management — doable.' },
-  { module: 'Transaction Management', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'Transaction processing, fare media products, inventory management.' },
-  { module: 'Settlement & Revenue Reconciliation', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Settlement engine, reconciliation, audit trail, MIS reports.' },
-  { module: 'Passenger Information System (PIS)', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'Real-time passenger information, dashboard, MIS reports.' },
-  { module: 'Incident Management System', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Incident logging, dashboard, MIS reports.' },
-  { module: 'Commuter Mobile App', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Commuter-facing mobile app with trip info and ticketing.' },
-  { module: 'Public Website', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Public interface, content management, login and role-based access.' },
+  // ── MASTER DATA ──
+  { cat: 'Master Data', module: 'Service Types', path: '/transit/service-types', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Defines bus service categories (ordinary, express, AC etc.). Used in fare rules, schedules, ETM ticketing for both clients.' },
+  { cat: 'Master Data', module: 'Route Management', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Route CRUD with stages, stops, source-destination, distance. MTC: schedule assignment. PM-e-seva: AVL route network + AVLS config.' },
+  { cat: 'Master Data', module: 'Depot / Entity Management', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Depot onboarding and entity mapping. Both need depot-level operations segregation and city/authority level visibility.' },
+  { cat: 'Master Data', module: 'Vehicle Registry', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Fleet onboarding, classification, status management. PM-e-seva adds EV-specific data (BMS health, charging status via OBITS CAN bus).' },
+
+  // ── SCHEDULING ──
+  { cat: 'Scheduling', module: 'Schedules', path: '/transit/schedules', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Route-schedule assignment with shift types, effective dates. PM-e-seva CMS/Crew module requires schedule sync with AVLS for adherence tracking.' },
+  { cat: 'Scheduling', module: 'Schedule Trips', path: '/transit/schedule-trips', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Trip instances by day type (weekday/weekend/holiday). PM-e-seva Crew Management uses duty-schedule linkage for roster and dispatch.' },
+  { cat: 'Scheduling', module: 'Schedule Trip Details', path: '/transit/schedule-trip-details', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Per-trip timing, route, distance. PM-e-seva uses this for schedule adherence monitoring and ETA computation in AVL.' },
+
+  // ── CREW & DUTY ──
+  { cat: 'Crew & Duty Management', module: 'Employee Management', path: '/transit/employee-bulk-upload', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Driver/conductor onboarding via CSV. PM-e-seva Crew Management requires crew profile, attendance, geo-location capture from mobile app.' },
+  { cat: 'Crew & Duty Management', module: 'Crew Allocation & Roster', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Shift allocation, duty roster (daily/weekly/monthly). PM-e-seva requires crew-bus assignment synced with AVLS; MTC maps to waybill generation flow.' },
+  { cat: 'Crew & Duty Management', module: 'Duty / Waybill Generation', path: '/transit/waybill-generation', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Daily duty sheet assigning bus, conductor, driver to schedule. PM-e-seva calls this duty allocation; same data structure — fleet + crew + schedule + date.' },
+  { cat: 'Crew & Duty Management', module: 'Duty / Waybill Audit', path: '/transit/waybill-audit', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'End-of-day audit of duty records. PM-e-seva AFCS requires duty-level transaction audit and revenue validation per duty.' },
+  { cat: 'Crew & Duty Management', module: 'Trip Management (Start/End)', path: '/transit/fleet-trip', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Operational trip start/end. PM-e-seva AVL tracks trip start/end via OBITS; crew mobile app marks same events — shared lifecycle.' },
+  { cat: 'Crew & Duty Management', module: 'Incentives & Allowances', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'MTC-specific: collection bata %, OT (3hr max), double duty/week-off wages. PM-e-seva CMS has crew allowances but structure differs — not shared.' },
+
+  // ── FLEET & DEVICE ──
+  { cat: 'Fleet & Device Management', module: 'Fleet-ETM Mapping', path: '/transit/fleet-etm-mapping', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Maps bus to ETM device. PM-e-seva AFCS requires ETM-fleet binding for transaction attribution and settlement — same requirement.' },
+  { cat: 'Fleet & Device Management', module: 'Fleet-OBU / AVL Mapping', path: '/transit/fleet-obu-mapping', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Maps bus to OBU/GPS device. PM-e-seva AVL system uses OBITS (OBU equivalent) for real-time tracking, panic alerts, passenger counting.' },
+  { cat: 'Fleet & Device Management', module: 'Device Vehicle Mapping', path: '/transit/device-vehicle-mapping', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Tablet/handheld to vehicle mapping. PM-e-seva crew mobile app uses similar device-bus binding for attendance and duty sync.' },
+
+  // ── FARE COLLECTION & AFC ──
+  { cat: 'Fare Collection & AFC', module: 'Fare Management', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Stage/distance/flat fare matrix with service-type rules and effective dates. Core of both AFC systems — PM-e-seva AFCS fare policy config.' },
+  { cat: 'Fare Collection & AFC', module: 'NCMC / Digital Payments', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'NCMC card acceptance, QR, UPI, wallet. PM-e-seva requires multi-issuer NCMC, FI integration (CDAC/NPCI). MTC needs NCMC top-up + remittance.' },
+  { cat: 'Fare Collection & AFC', module: 'Transaction Audit', path: '/transit/transaction-audit', status: 'built', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Per-duty transaction review with mode-of-payment split. PM-e-seva AFCS Audit Trail requires complete transaction log — same data, broader scope.' },
+  { cat: 'Fare Collection & AFC', module: 'Settlement & Reconciliation', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Revenue reconciliation per ETM/duty/depot. PM-e-seva AFCS Settlement requires daily/monthly automated reconciliation with bank/FI. MTC: remit = collection − allowances.' },
+
+  // ── INVENTORY ──
+  { cat: 'Inventory Management', module: 'ETM Roll Management', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Paper roll issued/returned/utilized per duty. PM-e-seva AFCS Inventory explicitly includes ETM paper rolls, charger, battery inventory — direct overlap.' },
+  { cat: 'Inventory Management', module: 'Manual / Pre-printed Ticket Inventory', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Stock of pre-printed fallback tickets. PM-e-seva AFCS Inventory explicitly covers pre-printed tickets alongside digital — same requirement as MTC.' },
+
+  // ── WAYBILL CLOSING (MTC-specific ops) ──
+  { cat: 'Waybill Closing', module: 'Waybill Closing Provisions', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'MTC-specific: police warranty, family pass, vouchers, bus stand fee, penalty, chartered trip, impress amount, trip deviation/TL-codes. Unique to Tamil Nadu operations.' },
+  { cat: 'Waybill Closing', module: 'Challan Generation', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'MTC-specific post-audit challan: denomination split, bata split, ETM roll, mode of sales, 6 schedule types.' },
+
+  // ── PM-e-seva SPECIFIC ──
+  { cat: 'PM-e-seva Specific', module: 'Contract Management (CMS)', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'Contract lifecycle for cities, operators, authority. Performance tracking against km, fleet availability, AVLS data. Alert system for invoices.' },
+  { cat: 'PM-e-seva Specific', module: 'AVL — Real-time Vehicle Tracking', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'GIS map, live bus location (5-sec OBITS packets), route adherence, schedule adherence, bus bunching, ETA. OBITS provides lat-long, speed, direction, CAN bus data.' },
+  { cat: 'PM-e-seva Specific', module: 'Passenger Counting System', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'Door-wise IN/OUT count from OBITS. Occupancy analytics by route/stop/time for demand forecasting.' },
+  { cat: 'PM-e-seva Specific', module: 'Panic Alerts (AIS-140)', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'AIS-140 compliant panic button via OBITS. Alert to control room with vehicle location. Safety compliance requirement.' },
+  { cat: 'PM-e-seva Specific', module: 'Passenger Information System (PIS)', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'Bus stop boards + in-bus displays: next stop, route, ETA, ads. Content management system for scheduled messages.' },
+  { cat: 'PM-e-seva Specific', module: 'Incident Management System', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'Incident logging, escalation workflow, dashboard, MIS reports. Linked to AVL for geo-tagged incidents.' },
+  { cat: 'PM-e-seva Specific', module: 'Commuter Mobile App', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'Journey planning, live bus tracking, QR ticketing, stop ETA. Android + iOS. Integrates with AFC and AVL.' },
+  { cat: 'PM-e-seva Specific', module: 'Public Website (PWA)', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'PM e-Bus Sewa scheme info, schedule downloads, CMS, role-based admin access. Progressive Web App.' },
+  { cat: 'PM-e-seva Specific', module: 'CDAC / NPCI ETM Integration', path: '—', status: 'pending', clients: ['PM-e-seva, NCR'], notes: 'ETM integration framework via CDAC + NPCI for NCMC acquiring, FI settlement. SI coordinates with CDAC for interface spec — PM-e-seva mandate.' },
+
+  // ── GROSS COST CONTRACT (GCC) ──
+  { cat: 'Gross Cost Contract', module: 'GCC Contract Management', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Store contract terms per operator: route bundles, km rates, fleet availability targets, contract period, incentive/penalty clauses. Basis for all GCC billing.' },
+  { cat: 'Gross Cost Contract', module: 'Km Performance Tracking', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Actual km operated per vehicle per duty/day derived from ETM trip data + AVL odometer. Source of truth for operator payment computation.' },
+  { cat: 'Gross Cost Contract', module: 'GCC Billing & Invoice Generation', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Monthly invoice per operator = km operated × rate + incentives − penalties. Must produce auditable, dispute-ready invoice with supporting trip-level data.' },
+  { cat: 'Gross Cost Contract', module: 'Schedule Adherence & Penalty Engine', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Auto-compute penalties: missed trips, late starts >X min, route deviation, fleet availability below contracted %. Rules configurable per contract.' },
+
+  // ── AFC CORE GAPS ──
+  { cat: 'AFC & Pass Management', module: 'Pass Issuance & Management', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Monthly/quarterly/annual pass issuance at depot or online portal. Linked to concessional category. Tracks active passes, renewals, cancellations.' },
+  { cat: 'AFC & Pass Management', module: 'Concessional Category Registry', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Configurable concession types (student, SC/ST, disability, freedom fighter, senior citizen) with fare % per service type. Controls ETM ticket pricing at validation.' },
+  { cat: 'AFC & Pass Management', module: 'NCMC Smart Card Lifecycle', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Card issuance, top-up, balance enquiry, card blacklisting, card replacement. Separate from payment acceptance — manages card lifecycle end-to-end.' },
+  { cat: 'AFC & Pass Management', module: 'Cash Bag Management', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Physical cash bag assigned to conductor at shift start. Sealed and deposited at depot end of shift. Chain-of-custody log with bag number, amount, seal, deposit confirmation.' },
+  { cat: 'AFC & Pass Management', module: 'Bank Reconciliation', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Match digital payment credits (QR/UPI/NCMC) in bank statements vs system-recorded amounts per duty/depot/day. Surface unmatched transactions for exception handling.' },
+
+  // ── INSPECTION & ENFORCEMENT ──
+  { cat: 'Inspection & Enforcement', module: 'Ticket Inspection (Flying Squad)', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Inspector mobile app: scan QR ticket or verify pass, log fare evaders, issue on-spot challan. Works offline. Separate from conductor ETM device and workflow.' },
+  { cat: 'Inspection & Enforcement', module: 'Fare Evasion Tracker', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Log caught evaders: route, stop, bus, conductor, inspector, amount evaded, challan issued. MIS for compliance and route-level evasion patterns.' },
+
+  // ── DEVICE LIFECYCLE & MDM ──
+  { cat: 'Device Lifecycle & MDM', module: 'ETM Remote Management (MDM)', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'OTA push of fare table updates, config changes, app versions to ETM fleet. Without MDM every update requires physical device collection at depot — operationally infeasible at scale.' },
+  { cat: 'Device Lifecycle & MDM', module: 'ETM Health Monitoring Dashboard', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Real-time per-device status: battery %, paper remaining, connectivity, last sync timestamp, active errors. Enables proactive swap before field failures.' },
+  { cat: 'Device Lifecycle & MDM', module: 'Device Repair & RMA Workflow', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Track ETMs sent for repair: fault logged, device removed from active pool, replacement allocated, repaired device re-onboarded. Swap and repair history per device.' },
+
+  // ── CREW & HR ADJACENT ──
+  { cat: 'Crew Operations', module: 'Leave & Attendance Management', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Conductor/driver leave application, approval workflow, attendance marking. Feeds into duty roster — auto-flag understaffing for next-day waybill generation.' },
+  { cat: 'Crew Operations', module: 'Duty Roster (Weekly / Monthly)', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Forward-planning roster view with leave overlay, rest-day rules, and shift balance. Different from daily waybill — used by depot managers for 1-4 week horizon planning.' },
+  { cat: 'Crew Operations', module: 'Overtime & Extra Duty Tracking', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Auto-identify conductors/drivers who operated beyond scheduled hours or did extra trips. Compute OT pay per applicable wage rules. Currently manual at MTC.' },
+
+  // ── REVENUE & FINANCIAL OPS ──
+  { cat: 'Revenue & Finance', module: 'Daily Traffic Cash Report (TCR)', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Standard depot-end-of-day report: depot-wise cash, mode splits (cash/digital/pass), denomination count, conductor-wise collection summary. Mandatory MTC HQ submission.' },
+  { cat: 'Revenue & Finance', module: 'Revenue Remittance Tracking', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Track remittance flow from depot to HQ treasury: amount, date, bank challan reference, acknowledgement. Reconcile against daily TCR totals.' },
+  { cat: 'Revenue & Finance', module: 'Impress Account Management', path: '—', status: 'pending', clients: ['MTC, Chennai'], notes: 'Float amount issued to conductor at shift start for making change. Adjusted at shift closure against cash collected. Currently a field in waybill — needs standalone ledger view.' },
+
+  // ── ANALYTICS & REPORTING ──
+  { cat: 'Analytics & Reporting', module: 'Headway & Bus Bunching Analytics', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Detect two buses on same route running too close together. Operational inefficiency and passenger experience signal. Requires AVL data; PM-e-seva AVLS mandates this.' },
+  { cat: 'Analytics & Reporting', module: 'Fleet Utilization Reports', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'Km per bus per day, idle bus count, maintenance-caused downtime %. Feeds GCC km billing validation and operational planning.' },
+  { cat: 'Analytics & Reporting', module: 'Executive / HQ Dashboard', path: '—', status: 'pending', clients: ['MTC, Chennai','PM-e-seva, NCR'], notes: 'C-suite real-time view: total revenue today, fleet on road, trips completed, exception count, schedule adherence %. Drill-down by depot/city. Role-gated to senior management.' },
 ];
 
 function injectModuleStatus(container, sidebar) {
@@ -2984,11 +3032,11 @@ function injectModuleStatus(container, sidebar) {
   statusCard.className = 'section-card';
   statusCard.id = 'sec-status';
 
-  const mtcBuilt = MODULE_STATUS.filter(m => m.status === 'built').length;
-  const mtcTotal = MODULE_STATUS.filter(m => m.client === 'MTC, Chennai').length;
+  const mtcBuilt = MODULE_STATUS.filter(m => m.status === 'built' && m.clients.includes('MTC, Chennai')).length;
+  const mtcTotal = MODULE_STATUS.filter(m => m.clients.includes('MTC, Chennai')).length;
   const pct = Math.round((mtcBuilt / mtcTotal) * 100);
 
-  const CLIENTS = [...new Set(MODULE_STATUS.map(m => m.client))];
+  const CLIENTS = [...new Set(MODULE_STATUS.flatMap(m => m.clients))];
 
   function statusBadge(s) {
     const map = {
@@ -3009,11 +3057,11 @@ function injectModuleStatus(container, sidebar) {
   }
 
   function buildRows(filter) {
-    const filtered = filter === 'all' ? MODULE_STATUS : MODULE_STATUS.filter(m => m.client === filter);
-    return filtered.map(m => `<tr data-client="${m.client}">
+    const filtered = filter === 'all' ? MODULE_STATUS : MODULE_STATUS.filter(m => m.clients.includes(filter));
+    return filtered.map(m => `<tr>
       <td><strong>${m.module}</strong></td>
       <td><code style="font-size:12px">${m.path}</code></td>
-      <td>${clientBadge(m.client)}</td>
+      <td>${m.clients.map(c => clientBadge(c)).join(' ')}</td>
       <td>${statusBadge(m.status)}</td>
       <td style="font-size:13px;color:#6b7280">${m.notes}</td>
     </tr>`).join('');
@@ -3254,7 +3302,7 @@ function filterModules(client, btn) {
   document.getElementById('module-tbody').innerHTML =
     client === 'all'
       ? MODULE_STATUS.map(m => moduleRow(m)).join('')
-      : MODULE_STATUS.filter(m => m.client === client).map(m => moduleRow(m)).join('');
+      : MODULE_STATUS.filter(m => m.clients.includes(client)).map(m => moduleRow(m)).join('');
   document.querySelectorAll('#client-filters button').forEach(b => {
     b.style.background = 'white'; b.style.color = '#4a5568'; b.style.border = '1px solid #d0d8f0';
   });
@@ -3271,11 +3319,14 @@ function moduleRow(m) {
   };
   const clientColors = { 'MTC, Chennai': ['#fce7f3','#9d174d'], 'PM-e-seva, NCR': ['#e0f2fe','#0369a1'] };
   const [sbg, scol, slabel] = statusMap[m.status] || ['#f3f4f6','#374151', m.status];
-  const [cbg, ccol] = clientColors[m.client] || ['#f3f4f6','#374151'];
+  const clientBadges = m.clients.map(c => {
+    const [cbg, ccol] = clientColors[c] || ['#f3f4f6','#374151'];
+    return `<span style="background:${cbg};color:${ccol};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-block;margin:1px">${c}</span>`;
+  }).join('');
   return `<tr>
     <td><strong>${m.module}</strong></td>
     <td><code style="font-size:12px">${m.path}</code></td>
-    <td><span style="background:${cbg};color:${ccol};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap">${m.client}</span></td>
+    <td>${clientBadges}</td>
     <td><span style="background:${sbg};color:${scol};padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap">${slabel}</span></td>
     <td style="font-size:13px;color:#6b7280">${m.notes}</td>
   </tr>`;
