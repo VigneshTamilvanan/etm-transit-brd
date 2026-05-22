@@ -2934,32 +2934,49 @@ function buildSections(html) {
 }
 
 const MODULE_STATUS = [
-  { module: 'Service Types', path: '/transit/service-types', status: 'built', notes: 'Create, list, delete. All 6 fields.' },
-  { module: 'Schedules', path: '/transit/schedules', status: 'built', notes: 'Create, edit, delete, CSV export, search.' },
-  { module: 'Schedule Trips', path: '/transit/schedule-trips', status: 'built', notes: 'Create, edit, delete, auto-navigate to details.' },
-  { module: 'Schedule Trip Details', path: '/transit/schedule-trip-details', status: 'built', notes: 'Single + bulk create, CSV import/export.' },
-  { module: 'Waybill Generation', path: '/transit/waybill-generation', status: 'built', notes: 'Create, edit, delete, filters. Re-change assignment pending.' },
-  { module: 'Waybill Audit', path: '/transit/waybill-audit', status: 'built', notes: 'Multi-filter, crew/fleet change, status edit.' },
-  { module: 'Fleet-ETM Mapping', path: '/transit/fleet-etm-mapping', status: 'built', notes: 'CSV import only.' },
-  { module: 'Fleet-OBU Mapping', path: '/transit/fleet-obu-mapping', status: 'built', notes: 'CSV import only.' },
-  { module: 'Device Vehicle Mapping', path: '/transit/device-vehicle-mapping', status: 'built', notes: 'CSV upload, tab search, sample template.' },
-  { module: 'Trip Management', path: '/transit/fleet-trip', status: 'built', notes: 'Start/end trips. Full detail review pending.' },
-  { module: 'Employee Bulk Upload', path: '/transit/employee-bulk-upload', status: 'built', notes: 'CSV, validation preview, role mapping.' },
-  { module: 'Transaction Audit', path: '/transit/transaction-audit', status: 'built', notes: 'Per-waybill, CSV export, stats.' },
-  { module: 'Waybill Closing Provisions', path: '—', status: 'pending', notes: 'Trip deviation, police warranty, family pass, vouchers, bus stand fee, penalty, chartered trip, impress amount.' },
-  { module: 'Manual Ticket Inventory', path: '—', status: 'pending', notes: 'CSV upload of pre-printed ticket stock. Denomination, KEY, BLOCK/MONTH-OPEN, RUNNING-NO, TYPE fields.' },
-  { module: 'ETM Roll Management', path: '—', status: 'pending', notes: 'Issued / returned (fresh + used) / utilized tracking per duty.' },
-  { module: 'Incentives & Allowances', path: '—', status: 'pending', notes: 'Collection bata %, trip allowances, OT (3hr max), double duty/week-off wages.' },
-  { module: 'Challan Generation', path: '—', status: 'pending', notes: 'Post-audit challan. Denomination split, bata split, ETM roll, mode of sales.' },
-  { module: 'Master Config (Wages)', path: '—', status: 'pending', notes: 'Super admin config for all allowance rates.' },
-  { module: 'Role & Access Config', path: '—', status: 'pending', notes: 'UI to manage roles: Branch Manager, EDP, Depot Manager, Admin Staff, HQ.' },
-  { module: 'Route Management (CRUD)', path: '—', status: 'pending', notes: 'Currently read-only lookup. Full CRUD not yet built.' },
-  { module: 'Depot Management (CRUD)', path: '—', status: 'pending', notes: 'Currently read-only lookup.' },
-  { module: 'Vehicle Registry (CRUD)', path: '—', status: 'pending', notes: 'Fleet onboarding, classification, status management.' },
-  { module: 'Fare Management', path: '—', status: 'pending', notes: 'Stage/distance/flat fare matrix, service-type-wise rules.' },
-  { module: 'Settlement & Reconciliation', path: '—', status: 'pending', notes: 'Remit computation, NCMC bata, exception management.' },
-  { module: 'NCMC Top-up', path: '—', status: 'pending', notes: 'Top-up in ETM app + added to remittance.' },
-  { module: 'Crew Allocation', path: '—', status: 'pending', notes: 'Shift allocation, duty management, bulk CSV per depot.' },
+  // ── MTC, Chennai ──
+  { module: 'Service Types', path: '/transit/service-types', status: 'built', client: 'MTC, Chennai', notes: 'Create, list, delete. All 6 fields.' },
+  { module: 'Schedules', path: '/transit/schedules', status: 'built', client: 'MTC, Chennai', notes: 'Create, edit, delete, CSV export, search.' },
+  { module: 'Schedule Trips', path: '/transit/schedule-trips', status: 'built', client: 'MTC, Chennai', notes: 'Create, edit, delete, auto-navigate to details.' },
+  { module: 'Schedule Trip Details', path: '/transit/schedule-trip-details', status: 'built', client: 'MTC, Chennai', notes: 'Single + bulk create, CSV import/export.' },
+  { module: 'Waybill Generation', path: '/transit/waybill-generation', status: 'built', client: 'MTC, Chennai', notes: 'Create, edit, delete, filters. Re-change assignment pending.' },
+  { module: 'Waybill Audit', path: '/transit/waybill-audit', status: 'built', client: 'MTC, Chennai', notes: 'Multi-filter, crew/fleet change, status edit.' },
+  { module: 'Fleet-ETM Mapping', path: '/transit/fleet-etm-mapping', status: 'built', client: 'MTC, Chennai', notes: 'CSV import only.' },
+  { module: 'Fleet-OBU Mapping', path: '/transit/fleet-obu-mapping', status: 'built', client: 'MTC, Chennai', notes: 'CSV import only.' },
+  { module: 'Device Vehicle Mapping', path: '/transit/device-vehicle-mapping', status: 'built', client: 'MTC, Chennai', notes: 'CSV upload, tab search, sample template.' },
+  { module: 'Trip Management', path: '/transit/fleet-trip', status: 'built', client: 'MTC, Chennai', notes: 'Start/end trips. Full detail review pending.' },
+  { module: 'Employee Bulk Upload', path: '/transit/employee-bulk-upload', status: 'built', client: 'MTC, Chennai', notes: 'CSV, validation preview, role mapping.' },
+  { module: 'Transaction Audit', path: '/transit/transaction-audit', status: 'built', client: 'MTC, Chennai', notes: 'Per-waybill, CSV export, stats.' },
+  { module: 'Waybill Closing Provisions', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Trip deviation, police warranty, family pass, vouchers, bus stand fee, penalty, chartered trip, impress amount.' },
+  { module: 'Manual Ticket Inventory', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'CSV upload of pre-printed ticket stock. Denomination, KEY, BLOCK/MONTH-OPEN, RUNNING-NO, TYPE fields.' },
+  { module: 'ETM Roll Management', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Issued / returned (fresh + used) / utilized tracking per duty.' },
+  { module: 'Incentives & Allowances', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Collection bata %, trip allowances, OT (3hr max), double duty/week-off wages.' },
+  { module: 'Challan Generation', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Post-audit challan. Denomination split, bata split, ETM roll, mode of sales.' },
+  { module: 'Master Config (Wages)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Super admin config for all allowance rates.' },
+  { module: 'Role & Access Config', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'UI to manage roles: Branch Manager, EDP, Depot Manager, Admin Staff, HQ.' },
+  { module: 'Route Management (CRUD)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Currently read-only lookup. Full CRUD not yet built.' },
+  { module: 'Depot Management (CRUD)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Currently read-only lookup.' },
+  { module: 'Vehicle Registry (CRUD)', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Fleet onboarding, classification, status management.' },
+  { module: 'Fare Management', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Stage/distance/flat fare matrix, service-type-wise rules.' },
+  { module: 'Settlement & Reconciliation', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Remit computation, NCMC bata, exception management.' },
+  { module: 'NCMC Top-up', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Top-up in ETM app + added to remittance.' },
+  { module: 'Crew Allocation', path: '—', status: 'pending', client: 'MTC, Chennai', notes: 'Shift allocation, duty management, bulk CSV per depot.' },
+
+  // ── PM-e-seva, NCR ──
+  { module: 'General Platform & User Management', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Multi-language (EN/HI), SSO, MFA, RBAC, business rule config with effective dates, PWA support.' },
+  { module: 'Dashboard & MIS Reports', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Operational dashboard and MIS reporting across all modules.' },
+  { module: 'Contract Management (CMS)', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'CMS for cities, operators, and authority. Workflow-based contract lifecycle management.' },
+  { module: 'Automatic Vehicle Location (AVL)', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Real-time vehicle tracking, route replay, route network config, maps integration.' },
+  { module: 'Passenger Counting System', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'Automated passenger counting integrated with AVL.' },
+  { module: 'Panic Alerts (AIS-140)', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'AIS-140 compliant panic alert system for crew safety.' },
+  { module: 'Crew Management System', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Roster, duty allocation, bus dispatch, crew mobile app, dashboard, MIS reports.' },
+  { module: 'Automated Fare Collection (AFCS)', path: '—', status: 'clarify', client: 'PM-e-seva, NCR', notes: 'Central AFC system design needs clarity. ETM integration, fare media/products, config management — doable.' },
+  { module: 'Transaction Management', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'Transaction processing, fare media products, inventory management.' },
+  { module: 'Settlement & Revenue Reconciliation', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Settlement engine, reconciliation, audit trail, MIS reports.' },
+  { module: 'Passenger Information System (PIS)', path: '—', status: 'doable', client: 'PM-e-seva, NCR', notes: 'Real-time passenger information, dashboard, MIS reports.' },
+  { module: 'Incident Management System', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Incident logging, dashboard, MIS reports.' },
+  { module: 'Commuter Mobile App', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Commuter-facing mobile app with trip info and ticketing.' },
+  { module: 'Public Website', path: '—', status: 'available', client: 'PM-e-seva, NCR', notes: 'Public interface, content management, login and role-based access.' },
 ];
 
 function injectModuleStatus(container, sidebar) {
@@ -2967,9 +2984,64 @@ function injectModuleStatus(container, sidebar) {
   statusCard.className = 'section-card';
   statusCard.id = 'sec-status';
 
-  const built = MODULE_STATUS.filter(m => m.status === 'built').length;
-  const total = MODULE_STATUS.length;
-  const pct = Math.round((built / total) * 100);
+  const mtcBuilt = MODULE_STATUS.filter(m => m.status === 'built').length;
+  const mtcTotal = MODULE_STATUS.filter(m => m.client === 'MTC, Chennai').length;
+  const pct = Math.round((mtcBuilt / mtcTotal) * 100);
+
+  const CLIENTS = [...new Set(MODULE_STATUS.map(m => m.client))];
+
+  function statusBadge(s) {
+    const map = {
+      built:     ['#dcfce7','#16a34a','✓ Built'],
+      pending:   ['#fef9c3','#92400e','⏳ To Build'],
+      available: ['#dbeafe','#1d4ed8','✔ Available'],
+      doable:    ['#ede9fe','#6d28d9','🔧 Doable'],
+      clarify:   ['#ffedd5','#c2410c','❓ Need Clarity'],
+    };
+    const [bg, col, label] = map[s] || ['#f3f4f6','#374151', s];
+    return `<span style="background:${bg};color:${col};padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap">${label}</span>`;
+  }
+
+  function clientBadge(c) {
+    const colors = { 'MTC, Chennai': ['#fce7f3','#9d174d'], 'PM-e-seva, NCR': ['#e0f2fe','#0369a1'] };
+    const [bg, col] = colors[c] || ['#f3f4f6','#374151'];
+    return `<span style="background:${bg};color:${col};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap">${c}</span>`;
+  }
+
+  function buildRows(filter) {
+    const filtered = filter === 'all' ? MODULE_STATUS : MODULE_STATUS.filter(m => m.client === filter);
+    return filtered.map(m => `<tr data-client="${m.client}">
+      <td><strong>${m.module}</strong></td>
+      <td><code style="font-size:12px">${m.path}</code></td>
+      <td>${clientBadge(m.client)}</td>
+      <td>${statusBadge(m.status)}</td>
+      <td style="font-size:13px;color:#6b7280">${m.notes}</td>
+    </tr>`).join('');
+  }
+
+  const body = document.createElement('div');
+  body.className = 'section-body open';
+  body.innerHTML = `
+    <div style="margin:12px 0 16px;background:#f8faff;border-radius:8px;padding:16px 20px;border:1px solid #e0e7ff">
+      <div style="font-size:13px;color:#4a5568;margin-bottom:8px">MTC, Chennai — build progress</div>
+      <div style="background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden">
+        <div style="background:linear-gradient(90deg,#6c7cff,#22c55e);width:${pct}%;height:100%;border-radius:99px;transition:width 1s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#9aa3c0;margin-top:6px">
+        <span>${mtcBuilt} modules built</span><span>${mtcTotal - mtcBuilt} modules pending</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="client-filters">
+      <button onclick="filterModules('all',this)" style="background:#1a1a2e;color:white;border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer">All</button>
+      ${CLIENTS.map(c => `<button onclick="filterModules('${c}',this)" style="background:white;color:#4a5568;border:1px solid #d0d8f0;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer">${c}</button>`).join('')}
+    </div>
+    <table id="module-table" style="table-layout:fixed;width:100%">
+      <colgroup>
+        <col style="width:17%"><col style="width:14%"><col style="width:13%"><col style="width:11%"><col style="width:45%">
+      </colgroup>
+      <thead><tr><th>Module</th><th>Path</th><th>Client</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody id="module-tbody">${MODULE_STATUS.map(m => moduleRow(m)).join('')}</tbody>
+    </table>`;
 
   const btn = document.createElement('button');
   btn.className = 'section-toggle open';
@@ -2979,54 +3051,13 @@ function injectModuleStatus(container, sidebar) {
       Module Status &amp; Build Progress
     </span>
     <span style="display:flex;align-items:center;gap:12px">
-      <span style="font-size:13px;color:#4a5568">${built}/${total} built &nbsp;<strong style="color:#22c55e">${pct}%</strong></span>
-      <span class="chevron open">&#8964;</span>
+      <span style="font-size:13px;color:#4a5568">${mtcBuilt}/${mtcTotal} MTC built &nbsp;<strong style="color:#22c55e">${pct}%</strong></span>
+      <span class="chevron">&#8964;</span>
     </span>`;
   btn.addEventListener('click', () => {
-    const body = statusCard.querySelector('.section-body');
     const isOpen = body.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
-    btn.querySelector('.chevron').classList.toggle('open', isOpen);
   });
-
-  const builtRows = MODULE_STATUS.filter(m => m.status === 'built')
-    .map(m => `<tr>
-      <td><strong>${m.module}</strong></td>
-      <td><code style="font-size:12px">${m.path}</code></td>
-      <td><span style="background:#dcfce7;color:#16a34a;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600">✓ Built</span></td>
-      <td style="font-size:13px;color:#6b7280">${m.notes}</td>
-    </tr>`).join('');
-
-  const pendingRows = MODULE_STATUS.filter(m => m.status === 'pending')
-    .map(m => `<tr>
-      <td><strong>${m.module}</strong></td>
-      <td><code style="font-size:12px">${m.path}</code></td>
-      <td><span style="background:#fef9c3;color:#92400e;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600">⏳ To Build</span></td>
-      <td style="font-size:13px;color:#6b7280">${m.notes}</td>
-    </tr>`).join('');
-
-  const body = document.createElement('div');
-  body.className = 'section-body open';
-  body.innerHTML = `
-    <div style="margin:12px 0 20px;background:#f8faff;border-radius:8px;padding:16px 20px;border:1px solid #e0e7ff">
-      <div style="font-size:13px;color:#4a5568;margin-bottom:8px">Overall build progress</div>
-      <div style="background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden">
-        <div style="background:linear-gradient(90deg,#6c7cff,#22c55e);width:${pct}%;height:100%;border-radius:99px;transition:width 1s"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;color:#9aa3c0;margin-top:6px">
-        <span>${built} modules built</span><span>${total - built} modules pending</span>
-      </div>
-    </div>
-    <table style="table-layout:fixed;width:100%">
-      <colgroup>
-        <col style="width:18%">
-        <col style="width:22%">
-        <col style="width:10%">
-        <col style="width:50%">
-      </colgroup>
-      <thead><tr><th>Module</th><th>Path</th><th>Status</th><th>Notes</th></tr></thead>
-      <tbody>${builtRows}${pendingRows}</tbody>
-    </table>`;
 
   statusCard.appendChild(btn);
   statusCard.appendChild(body);
@@ -3217,6 +3248,37 @@ function renderSections(sections) {
     cards[1].querySelector('.section-body').classList.add('open');
     cards[1].querySelector('.section-toggle').classList.add('open');
   }
+}
+
+function filterModules(client, btn) {
+  document.getElementById('module-tbody').innerHTML =
+    client === 'all'
+      ? MODULE_STATUS.map(m => moduleRow(m)).join('')
+      : MODULE_STATUS.filter(m => m.client === client).map(m => moduleRow(m)).join('');
+  document.querySelectorAll('#client-filters button').forEach(b => {
+    b.style.background = 'white'; b.style.color = '#4a5568'; b.style.border = '1px solid #d0d8f0';
+  });
+  btn.style.background = '#1a1a2e'; btn.style.color = 'white'; btn.style.border = 'none';
+}
+
+function moduleRow(m) {
+  const statusMap = {
+    built:     ['#dcfce7','#16a34a','✓ Built'],
+    pending:   ['#fef9c3','#92400e','⏳ To Build'],
+    available: ['#dbeafe','#1d4ed8','✔ Available'],
+    doable:    ['#ede9fe','#6d28d9','🔧 Doable'],
+    clarify:   ['#ffedd5','#c2410c','❓ Need Clarity'],
+  };
+  const clientColors = { 'MTC, Chennai': ['#fce7f3','#9d174d'], 'PM-e-seva, NCR': ['#e0f2fe','#0369a1'] };
+  const [sbg, scol, slabel] = statusMap[m.status] || ['#f3f4f6','#374151', m.status];
+  const [cbg, ccol] = clientColors[m.client] || ['#f3f4f6','#374151'];
+  return `<tr>
+    <td><strong>${m.module}</strong></td>
+    <td><code style="font-size:12px">${m.path}</code></td>
+    <td><span style="background:${cbg};color:${ccol};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap">${m.client}</span></td>
+    <td><span style="background:${sbg};color:${scol};padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap">${slabel}</span></td>
+    <td style="font-size:13px;color:#6b7280">${m.notes}</td>
+  </tr>`;
 }
 
 function toggleSidebar() {
